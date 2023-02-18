@@ -1,27 +1,35 @@
+import { createBrowserRouter,
+  Route,
+  createRoutesFromElements,
+  RouterProvider
+ } from 'react-router-dom'
+
 import './App.css';
 
+// pages
+import Home from './pages/Home';
+import About from './pages/About';
+import Game from './pages/Game';
+import Login from './pages/Login';
+
+// layouts
+import RootLayout from './layouts/RootLayout';
+
+const router = createBrowserRouter(
+    createRoutesFromElements(
+    <Route path="/" element={ <RootLayout /> }>
+      <Route index element={<Home />} />
+      <Route path="about" element={<About />} />
+      <Route path="game" element={<Game />} />
+      <Route path="login" element={<Login />} />
+    </Route>
+    )
+)
+
 function App() {
-  return (
-    <div className="App">
-      <div className="col-span-3 sm:col-span-2">
-        <label htmlFor="company-website" className="block text-sm font-medium text-gray-700">
-          Website
-        </label>
-        <div className="mt-1 flex rounded-md shadow-sm">
-          <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
-            http://
-          </span>
-          <input
-            type="text"
-            name="company-website"
-            id="company-website"
-            className="block w-full flex-1 rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="www.example.com"
-          />
-        </div>
-      </div>
-    </div>
-  );
+    return ( 
+      <RouterProvider router={router} />
+    );
 }
 
 export default App;
