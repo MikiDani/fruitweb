@@ -14,7 +14,7 @@ export default function Home() {
         <div class="bg-orange-300 col-span-2">07</div>
     </div>
     <div className='mt-3'>
-        <img src="./img/01.jpg" alt="bg" title='bg' className='grayscale hover:grayscale-0 transition delay-150' />
+        <img src="./img/01.jpg" alt="bg" title='bg' className='grayscale hover:grayscale-0 transition delay-150 rounded-full' />
     </div>
     </>
 

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 export default function Login() {
 
   const [form, setForm] = useState({});
+  const [users, setUsers] = useState([]);
 
   const handleForm = (e) => {   
     setForm({
@@ -11,13 +12,44 @@ export default function Login() {
     });  
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     console.log(form);
+    const response = await fetch('http://localhost:8080/login', {
+      method: 'POST',
+      body: JSON.stringify(form),
+      headers: {
+        'Content-Type':'application/json'
+      }
+    });
+
+    const data = await response.json();
+    console.log(data);
   }
+
+  const getUsers = async () => {
+    const response = await fetch('http://localhost:8080/list', {
+      method: 'GET'
+    });
+
+    const data = await response.json();
+
+    setUsers(data);
+  }
+
+  useEffect(()=>{
+    console.log('bent!');
+    getUsers();
+  }, [form]);
 
   return (
     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mx-auto">
       {JSON.stringify(form)}
+      <div className="">
+        <ul>
+          {users.map(user=><li key={user._id}>{user.username}, {user.password}</li>)}
+        </ul>
+      </div>
       <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           Login
