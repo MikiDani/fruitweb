@@ -4,6 +4,8 @@ export default function Login() {
 
   const [form, setForm] = useState({});
   const [users, setUsers] = useState([]);
+  const [delId, setDelId] = useState([]);
+  const [data1, setData1] = useState([]);
 
   const handleForm = (e) => {   
     setForm({
@@ -12,6 +14,40 @@ export default function Login() {
     });  
   }
 
+  const handleClickRemove = async (e) => { 
+    
+    const response = await fetch('http://localhost:8080/remove', {
+      method: 'POST',
+      body: JSON.stringify(delId),
+      headers: {
+        'Content-Type':'application/json'
+      }
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
+  const handleClickAdd = async (e) => { 
+    
+    setData1({
+      'username': 'Viti',
+      'password': 'abcdef'
+    });
+
+    console.log(data1);
+
+    const response = await fetch('http://localhost:8080/add', {
+      method: 'POST',
+      body: JSON.stringify(data1),
+      headers: {
+        'Content-Type':'application/json'
+      }
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(form);
@@ -38,7 +74,7 @@ export default function Login() {
   }
 
   useEffect(()=>{
-    console.log('bent!');
+    console.log('useEffect...');
     getUsers();
   }, [form]);
 
@@ -79,6 +115,18 @@ export default function Login() {
             Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Registracion</a>
           </p>
         </form>
+      </div>
+
+      <div className='text-center'>
+      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" onClick={handleClickAdd}>
+          Save changes
+        </button>
+      </div>
+
+      <div className='text-center'>
+      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" onClick={handleClickRemove}>
+          Remove changes
+        </button>
       </div>
     </div>
   )
