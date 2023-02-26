@@ -1,26 +1,10 @@
 const cors = require('cors');
 const express = require('express');
 const bodyPharser = require('body-parser');
-const mongoose = require('mongoose');
+const { connectToDb, getDb } = require('./db');
+const { ObjectId } = require('mongodb');
 
-main().catch(err => console.log(err));
-
-async function main() {
-
-    // True a szigorú séma betartást jelenti. A false esetén azokat a kapott adatokat is menti amik nincsenek meghatározva a sémában.
-    mongoose.set('strictQuery', true);
-
-    await mongoose.connect('mongodb://127.0.0.1:27017/fruitweb');
-    console.log('Mongo db connected.');
-    // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-}
-
-const usersSchema = new mongoose.Schema({
-    username: String,
-    password: String
-});
-
-const User = mongoose.model('User', usersSchema);
+const port = 8080;
 
 const server = express();
 
@@ -28,57 +12,52 @@ server.use(express.json());
 server.use(cors());
 server.use(bodyPharser.json());
 
-const port = 8080;
+// db connection
+let db
 
-// CRUD
+connectToDb((err) => {
+    if (!err) {
+        server.listen(port, () => {
+            console.log('Mongo Db connected.');
+            console.log('server listening on port ' + port);
+        })
+        db = getDb()
+    }
+})
 
-server.get('/list', async(req, res) => {
+// routes
+server.get('/list', (req, res) => {
 
-    const doc = await User.find({ username: /Dani/, password: /12345/ });
-    res.send(doc);
-});
+    let users = [];
 
-server.post('/login', async(req, res) => {
+    db.collection('users')
+        .find()
+        .sort({ username: 1 })
+        .forEach(user => users.push(user))
+        .then(() => {
+            res.status(200).json(users)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the document.' })
+        })
+})
 
-    let user = new User();
-    user.username = req.body.username;
-    user.password = req.body.password;
+server.get('/user/:id', (req, res) => {
 
-    const doc = await user.save();
+    if (ObjectId.isValid(req.params.id)) {
 
-    console.log(doc);
-    res.json(doc);
-});
+        var objectId = new ObjectId(req.params.id);
 
-server.post('/add', async(req, res) => {
-    console.log('ADD');
-
-    console.log(req.body);
-
-    let user = new User();
-    user.username = req.body.username;
-    user.password = req.body.password;
-
-    const doc = await user.save();
-
-    res.json(doc);
-});
-
-server.post('/remove', async(req, res) => {
-    console.log('REMOVE');
-
-    console.log(req.body);
-    
-    let user = new User();
-    user.username = req.body.username;
-    user.password = req.body.password;
-
-    const doc = await user.remove({_id: '63f3beb22a872802e1392506'});
-    res.json(doc);
-    
-});
-
-// LISTENER
-server.listen(port, () => {
-    console.log('Server started : ' + port + ' port.');
-});
+        db.collection('users')
+            .findOne({ _id: objectId })
+            .then((data) => {
+                console.log(data);
+                res.status(200).json(data)
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+    } else {
+        res.status(500).json({ error: 'Not a valid id.' })
+    }
+})
