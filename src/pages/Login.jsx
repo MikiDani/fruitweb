@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 export default function Login() {
 
+  const url = "http://localhost:8080";
+
   const [form, setForm] = useState({});
   const [users, setUsers] = useState([]);
   const [delId, setDelId] = useState([]);
@@ -16,7 +18,8 @@ export default function Login() {
 
   const handleClickRemove = async (e) => { 
     
-    const response = await fetch('http://localhost:8080/remove', {
+
+    const response = await fetch(url+'/users/12', {
       method: 'POST',
       body: JSON.stringify(delId),
       headers: {
@@ -105,7 +108,7 @@ export default function Login() {
                 <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="" />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">Remember me</label>
+                <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">I am not a Robot!</label>
               </div>
             </div>
             <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
@@ -124,7 +127,7 @@ export default function Login() {
       </div>
 
       <div className='text-center'>
-      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" onClick={handleClickRemove}>
+      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" userid="34" onClick={handleClickRemove}>
           Remove changes
         </button>
       </div>

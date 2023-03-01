@@ -13,11 +13,11 @@ import Game from './pages/Game';
 import Login from './pages/Login';
 
 // layouts
-import RootLayout from './layouts/RootLayout';
+import RootIndex from './layouts/RootIndex';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-    <Route path="/" element={ <RootLayout /> }>
+    <Route path="/" element={ <RootIndex /> }>
       <Route index element={<Home />} />
       <Route path="about" element={<About />} />
       <Route path="game" element={<Game />} />

@@ -2,7 +2,7 @@ const log = console.log;
 const cors = require('cors');
 const express = require('express');
 const bodyPharser = require('body-parser');
-const { connectToDb, getDb } = require('./db');
+const { connectToDb, getDb, danika } = require('./db');
 const { ObjectId } = require('mongodb');
 
 const port = 8080;
@@ -13,6 +13,14 @@ server.use(express.json());
 server.use(express.json());
 server.use(cors());
 server.use(bodyPharser.json());
+
+// danikateszt
+
+let result = danika(5, 7);
+
+log('danika result: ' + result);
+
+
 
 // db connection
 let db;
