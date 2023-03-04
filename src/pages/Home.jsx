@@ -14,6 +14,5 @@ export default function Home() {
         <img src="./img/01.jpg" alt="bg" title='bg' className='grayscale hover:grayscale-0 transition delay-150 rounded-lg' />
     </div>
     </>
-
   )
-} 
+}

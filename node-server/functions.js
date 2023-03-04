@@ -1,4 +1,4 @@
-checkInputs = function(inputDatas, mandatory) {
+checkInputs = (inputDatas, mandatory) => {
 
     let checkTables = {};
     let returnTable = {};
@@ -32,6 +32,5 @@ checkInputs = function(inputDatas, mandatory) {
     const result = (allTrue) ? returnTable : false;
     return result;
 }
-
 
 module.exports = { checkInputs };

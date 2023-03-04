@@ -103,24 +103,34 @@ server.post('/login', (req, res) => {
 })
 
 // INSERT USER
-server.post('/users', (req, res) => {
+server.post('/users', async(req, res) => {
     const mandatory = ['username', 'email', 'password'];
 
     let input = functions.checkInputs(req.body, mandatory);
     console.log(input);
 
     if (input) {
+        // check username and email in database
 
-        // check username and email in database .....
+        let issetUsername = await checkValue(db, 'users', 'username', input.username);
+        let issetEmail = await checkValue(db, 'users', 'email', input.email);
 
-        db.collection('users')
-            .insertOne(input)
-            .then(result => {
-                res.status(201).json(result)
-            })
-            .catch(err => {
-                res.status(500).json({ err: 'Could not create a new document.' })
-            })
+        if (!issetUsername && !issetEmail) {
+            // insert user in database
+            db.collection('users')
+                .insertOne(input)
+                .then(result => {
+                    res.status(201).json(result)
+                })
+                .catch(err => {
+                    res.status(500).json({ err: 'Could not create a new document.' })
+                })
+        } else {
+            let errorMsg = '';
+            if (issetUsername) { errorMsg += 'The username is already in use! '; }
+            if (issetEmail) { errorMsg += 'The email is already in use!'; }
+            res.status(400).json({ err: errorMsg })
+        }
     } else {
         res.status(400).json({ err: 'Input error.' })
     }
@@ -167,3 +177,36 @@ server.patch('/users/:id', (req, res) => {
         res.status(500).json({ error: 'Not a vaild id.' });
     }
 })
+
+////////////////////////////
+// Database use Functions //
+////////////////////////////
+
+checkValue = async(db, database, rowKey, rowValue) => {
+
+    let returnValue = false;
+
+    let query = {};
+    query[rowKey] = rowValue;
+
+    let resDataContainer = [];
+
+    try {
+        await db.collection(database)
+            .find(query)
+            .forEach(data => resDataContainer.push(data))
+            .then(() => {
+                resDataContainer.forEach(element => {
+                    if (element[rowKey] == rowValue) {
+                        //log(element[rowKey]);
+                        returnValue = true;
+                    }
+                });
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+    } finally {
+        return returnValue;
+    }
+}
