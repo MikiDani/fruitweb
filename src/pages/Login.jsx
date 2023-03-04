@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react"
+import { NavLink } from "react-router-dom"
 
 export default function Login() {
 
@@ -6,55 +7,20 @@ export default function Login() {
 
   const [form, setForm] = useState({});
   const [users, setUsers] = useState([]);
-  const [delId, setDelId] = useState([]);
-  const [data1, setData1] = useState([]);
 
-  const handleForm = (e) => {   
+  const handleForm = (e) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
     setForm({
       ...form,
       [e.target.name] : e.target.value
     });  
   }
-
-  const handleClickRemove = async (e) => { 
-    
-
-    const response = await fetch(url+'/users/12', {
-      method: 'POST',
-      body: JSON.stringify(delId),
-      headers: {
-        'Content-Type':'application/json'
-      }
-    });
-
-    const data = await response.json();
-    console.log(data);
-  };
-  const handleClickAdd = async (e) => { 
-    
-    setData1({
-      'username': 'Viti',
-      'password': 'abcdef'
-    });
-
-    console.log(data1);
-
-    const response = await fetch('http://localhost:8080/add', {
-      method: 'POST',
-      body: JSON.stringify(data1),
-      headers: {
-        'Content-Type':'application/json'
-      }
-    });
-
-    const data = await response.json();
-    console.log(data);
-  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(form);
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch('http://localhost:8080/users', {
       method: 'POST',
       body: JSON.stringify(form),
       headers: {
@@ -67,12 +33,11 @@ export default function Login() {
   }
 
   const getUsers = async () => {
-    const response = await fetch('http://localhost:8080/list', {
+    const response = await fetch('http://localhost:8080/allusers', {
       method: 'GET'
     });
 
     const data = await response.json();
-
     setUsers(data);
   }
 
@@ -115,21 +80,11 @@ export default function Login() {
           </div>
           <button type="submit" className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Login</button>
           <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-            Don’t have an account yet? <a href="#" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Registracion</a>
+            Don’t have an account yet? <NavLink to="/registration" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+            Registration
+            </NavLink>
           </p>
         </form>
-      </div>
-
-      <div className='text-center'>
-      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" onClick={handleClickAdd}>
-          Save changes
-        </button>
-      </div>
-
-      <div className='text-center'>
-      <button className="p-2 m-2 rounded-lg bg-blue-500 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300" userid="34" onClick={handleClickRemove}>
-          Remove changes
-        </button>
       </div>
     </div>
   )

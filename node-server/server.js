@@ -4,6 +4,7 @@ const express = require('express');
 const bodyPharser = require('body-parser');
 const { connectToDb, getDb, danika } = require('./db');
 const { ObjectId } = require('mongodb');
+const functions = require('./functions');
 
 const port = 8080;
 
@@ -13,14 +14,6 @@ server.use(express.json());
 server.use(express.json());
 server.use(cors());
 server.use(bodyPharser.json());
-
-// danikateszt
-
-let result = danika(5, 7);
-
-log('danika result: ' + result);
-
-
 
 // db connection
 let db;
@@ -36,9 +29,31 @@ connectToDb((err) => {
 })
 
 // routes
-// users list
-server.get('/users', (req, res) => {
+
+// ALL USERS LIST
+server.get('/allusers', (req, res) => {
     // current page
+    const page = req.query.p || 0;
+    const userPerPage = 2
+
+    log('page: ' + page);
+
+    let users = [];
+
+    db.collection('users')
+        .find()
+        .sort({ username: 1 })
+        .forEach(user => users.push(user))
+        .then(() => {
+            res.status(200).json(users)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the document.' })
+        })
+})
+
+// USERS / PAGES
+server.get('/pageusers', (req, res) => {
     const page = req.query.p || 0;
     const userPerPage = 2
 
@@ -60,7 +75,7 @@ server.get('/users', (req, res) => {
         })
 })
 
-// one user datas
+// ONE USER DATAS
 server.get('/users/:id', (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
@@ -79,20 +94,39 @@ server.get('/users/:id', (req, res) => {
     }
 })
 
-// insert user
-server.post('/users', (req, res) => {
+// LOGIN
+server.post('/login', (req, res) => {
     const userDatas = req.body;
 
-    db.collection('users')
-        .insertOne(userDatas)
-        .then(result => {
-            res.status(201).json(result)
-        })
-        .catch(err => {
-            res.status(500).json({ err: 'Could not create a new document.' })
-        })
+    res.status(200).json({ msg: 'Itt lesz a bejelentkezés...' })
+
 })
 
+// INSERT USER
+server.post('/users', (req, res) => {
+    const mandatory = ['username', 'email', 'password'];
+
+    let input = functions.checkInputs(req.body, mandatory);
+    console.log(input);
+
+    if (input) {
+
+        // check username and email in database .....
+
+        db.collection('users')
+            .insertOne(input)
+            .then(result => {
+                res.status(201).json(result)
+            })
+            .catch(err => {
+                res.status(500).json({ err: 'Could not create a new document.' })
+            })
+    } else {
+        res.status(400).json({ err: 'Input error.' })
+    }
+})
+
+// DELETE USER
 server.delete('/users/:id', (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
@@ -112,6 +146,7 @@ server.delete('/users/:id', (req, res) => {
     }
 })
 
+// UPDATE USER DATA
 server.patch('/users/:id', (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
