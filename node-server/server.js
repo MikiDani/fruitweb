@@ -18,8 +18,8 @@ server.use(bodyPharser.json());
 // db connection
 let db;
 
-connectToDb((err) => {
-    if (!err) {
+connectToDb((error) => {
+    if (!error) {
         server.listen(port, () => {
             log('Mongo Db connected.');
             log('server listening on port ' + port);
@@ -33,7 +33,7 @@ connectToDb((err) => {
 // ALL USERS LIST
 server.get('/allusers', (req, res) => {
     // current page
-    const page = req.query.p || 0;
+    const page = req.query.p || 0
     const userPerPage = 2
 
     log('page: ' + page);
@@ -54,12 +54,12 @@ server.get('/allusers', (req, res) => {
 
 // USERS / PAGES
 server.get('/pageusers', (req, res) => {
-    const page = req.query.p || 0;
+    const page = req.query.p || 0
     const userPerPage = 2
 
     log('page: ' + page);
 
-    let users = [];
+    let users = []
 
     db.collection('users')
         .find()
@@ -103,7 +103,7 @@ server.post('/login', (req, res) => {
 })
 
 // INSERT USER
-server.post('/users', async(req, res) => {
+server.post('/users/add', async(req, res) => {
     const mandatory = ['username', 'email', 'password'];
 
     let input = functions.checkInputs(req.body, mandatory);
@@ -123,16 +123,16 @@ server.post('/users', async(req, res) => {
                     res.status(201).json(result)
                 })
                 .catch(err => {
-                    res.status(500).json({ err: 'Could not create a new document.' })
+                    res.status(500).json({ error: 'Could not create a new document.' })
                 })
         } else {
             let errorMsg = '';
             if (issetUsername) { errorMsg += 'The username is already in use! '; }
             if (issetEmail) { errorMsg += 'The email is already in use!'; }
-            res.status(400).json({ err: errorMsg })
+            res.status(400).json({ error: errorMsg })
         }
     } else {
-        res.status(400).json({ err: 'Input error.' })
+        res.status(400).json({ error: 'Missing inputs.' })
     }
 })
 

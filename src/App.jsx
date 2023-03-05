@@ -1,8 +1,9 @@
-import { createBrowserRouter,
+import {
+  createBrowserRouter,
   Route,
   createRoutesFromElements,
   RouterProvider
- } from 'react-router-dom'
+} from 'react-router-dom'
 
 import './App.css';
 
@@ -17,24 +18,24 @@ import Registration from './pages/Registration';
 import RootIndex from './layouts/RootIndex';
 
 const router = createBrowserRouter(
-    createRoutesFromElements(
-    <Route path="/" element={ <RootIndex /> }>
+  createRoutesFromElements(
+    <Route path="/" element={<RootIndex />}>
       <Route index element={<Home />} />
-      <Route path="about" element={<About />} />
-      <Route path="game" element={<Game />} />
-      <Route path="login" element={<Login />} />
-      <Route path="registration" element={<Registration />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/registration" element={<Registration />} />
     </Route>
-    )
+  )
 )
 
 function App() {
-    console.log(process.env.REACT_APP_API_KEY);
-    console.log(process.env.REACT_APP_USER_ID);
-    console.log(process.env.REACT_APP_SZAM);
-    return ( 
-      <RouterProvider router={router} />
-    );
+  console.log(process.env.REACT_APP_API_KEY);
+  console.log(process.env.REACT_APP_USER_ID);
+  console.log(process.env.REACT_APP_SZAM);
+  return (
+    <RouterProvider router={router} />
+  );
 }
 
 export default App;
