@@ -9,7 +9,7 @@ export default function RootIndex() {
   const [menuOpen, setMenuOpen] = useState('hidden')
 
   const hamburgerClick = () => {
-    console.log('Click!!!');
+
     let value = (menuOpen == 'hidden') ? 'show' : 'hidden';
     console.log(value);
     setMenuOpen(value);
