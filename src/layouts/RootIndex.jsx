@@ -10,8 +10,7 @@ export default function RootIndex() {
 
   const hamburgerClick = () => {
 
-    let value = (menuOpen == 'hidden') ? 'show' : 'hidden';
-    console.log(value);
+    let value = (menuOpen == 'hidden') ? 'show' : 'hidden'; 
     setMenuOpen(value);
   }
 
