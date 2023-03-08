@@ -36,7 +36,7 @@ server.get('/allusers', (req, res) => {
     const page = req.query.p || 0
     const userPerPage = 2
 
-    log('page: ' + page);
+    //log('page: ' + page);
 
     let users = [];
 
@@ -57,7 +57,7 @@ server.get('/pageusers', (req, res) => {
     const page = req.query.p || 0
     const userPerPage = 2
 
-    log('page: ' + page);
+    //log('page: ' + page);
 
     let users = []
 

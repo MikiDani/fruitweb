@@ -1,0 +1,20 @@
+$bg: beige;
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    //background-color: beige;
+    background-color: $bg;
+}
+
+.menuAnim {
+    background-color: #03fca9;
+    transform: scaleY(0%);
+    height: 200px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.menuOpen {
+    transform: scaleY(100%);
+    transform-origin: top;
+}

@@ -8,7 +8,7 @@ export default function Registration() {
   const url = 'http://localhost:8080'
 
   const [form, setForm] = useState({})
-  const [msg, setMsg] = useState('')
+  const [msg, setMsg] = useState({ msg:'Teszt', style: 'text-green-600'})
 
   const resetForm = () => {
     document.querySelector(`#robotbutton`).checked = false
@@ -19,9 +19,9 @@ export default function Registration() {
         document.querySelector(`#${element}`).value = ''
       })
     }
-    sessionStorage.clear();
+    sessionStorage.clear()
     setForm({})
-    setMsg('')
+    setMsg({ msg:'', style: ''})
   }
 
   const handleForm = (e) => {
@@ -32,7 +32,6 @@ export default function Registration() {
     setForm(insert)
     sessionStorage.setItem('regForm', JSON.stringify(insert))
     console.log(insert);
-    //console.log(sessionStorage.getItem('regForm'));
   }
   
   const handleCheck = (e) => {
@@ -43,7 +42,6 @@ export default function Registration() {
     setForm(insert)
     sessionStorage.setItem('regForm', JSON.stringify(insert))
     console.log(insert);
-    //console.log(sessionStorage.getItem('regForm'));
   }
 
   const handleSubmit = async (e) => {
@@ -101,16 +99,16 @@ export default function Registration() {
       })
 
       const resData = await response.json()
-      setMsg('')
+      setMsg({ msg:'valami', style: 'text-green-500'})
       Object.keys(resData).forEach(key => {
         if (key === 'error') { setMsg(resData.error) }
         if (key === 'success') { 
-          setMsg(resData.success) 
+          setMsg({msg: resData.success, style:'text-green-500'})
           resetForm()
         }
       })
     } else {
-      setMsg(errorMsg)
+      setMsg({ msg: errorMsg, style: 'text-red-600'})
     }
   }
 
@@ -177,7 +175,7 @@ export default function Registration() {
               </div>
             </div>
             <div className='p-3'>
-              {msg && <div className='text-center text-red-500'>{msg}</div>}
+              {msg && <div className={`text-center ${msg.style}`}>{msg.msg}</div>}
             </div>
             <button type='submit' className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'>Registration</button>
             <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
