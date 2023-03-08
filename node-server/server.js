@@ -102,7 +102,7 @@ server.post('/login', (req, res) => {
 
 })
 
-// INSERT USER
+// REGISTRATION
 server.post('/users/add', async(req, res) => {
     const mandatory = ['username', 'email', 'password'];
 
@@ -120,7 +120,8 @@ server.post('/users/add', async(req, res) => {
             db.collection('users')
                 .insertOne(input)
                 .then(result => {
-                    res.status(201).json(result)
+                    // result visszaküld?
+                    res.status(201).json({ success: 'Successful registration!' })
                 })
                 .catch(err => {
                     res.status(500).json({ error: 'Could not create a new document.' })

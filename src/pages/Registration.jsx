@@ -10,10 +10,10 @@ export default function Registration() {
   const [form, setForm] = useState({})
   const [msg, setMsg] = useState('')
 
-  const resetForm = (e) => {
+  const resetForm = () => {
     document.querySelector(`#robotbutton`).checked = false
     const sessionForm = JSON.parse(sessionStorage.getItem('regForm'))
-    if (sessionForm != null) {
+    if (sessionForm !== null) {
       Object.keys(sessionForm).map(element => {
         //console.log(element)
         document.querySelector(`#${element}`).value = ''
@@ -83,7 +83,7 @@ export default function Registration() {
       errorMsg += ' ' + error + ' '
     }
     try {
-      if (form.password != form.repassword) {
+      if (form.password !== form.repassword) {
         throw ('The passwords entered do not match.')
       }
     }
@@ -91,7 +91,7 @@ export default function Registration() {
       errorMsg += ' ' + error + ' '
     }
 
-    if (errorMsg == '') {
+    if (errorMsg === '') {
       const response = await fetch('http://localhost:8080/users/add', {
         method: 'POST',
         body: JSON.stringify(form),
@@ -103,7 +103,11 @@ export default function Registration() {
       const resData = await response.json()
       setMsg('')
       Object.keys(resData).forEach(key => {
-        if (key == 'error') { setMsg(resData.error) }
+        if (key === 'error') { setMsg(resData.error) }
+        if (key === 'success') { 
+          setMsg(resData.success) 
+          resetForm()
+        }
       })
     } else {
       setMsg(errorMsg)
@@ -116,7 +120,7 @@ export default function Registration() {
     //sessionStorage.clear();
     let sessionForm = JSON.parse(sessionStorage.getItem('regForm'));
     
-    if (sessionForm == null) {
+    if (sessionForm === null) {
       sessionForm = '';
     } else {
       setForm(sessionForm);
@@ -126,9 +130,7 @@ export default function Registration() {
         document.querySelector(`#${element}`).value = sessionForm[element]
       });
     }
-    console.log('sessionStorage : ');
-    console.log(sessionForm);
-    console.log(form);
+    //console.log('sessionStorage : '); console.log(sessionForm); console.log(form);
 
   }, [])
 
