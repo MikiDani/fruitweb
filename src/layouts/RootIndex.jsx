@@ -1,15 +1,14 @@
 import React from 'react'
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import Dropdown from './Dropdown';
-
+import Dropdown from './Dropdown'
 import MenuList from './MenuList'
+
 export default function RootIndex() {
 
   const [menuOpen, setMenuOpen] = useState('hidden')
 
   const hamburgerClick = () => {
-
     let value = (menuOpen == 'hidden') ? 'show' : 'hidden'; 
     setMenuOpen(value);
   }
@@ -45,7 +44,7 @@ export default function RootIndex() {
         <Outlet />
       </main>
 
-      <footer className='p-3 bg-slate-400 rounded-b-lg'>
+      <footer className='p-3 bg-slate-400 rounded-b-lg mb-10'>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia fugit molestias accusantium, cupiditate ea incidunt laborum sunt earum laudantium iure.</p>
       </footer>
     </div>
