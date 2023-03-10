@@ -98,7 +98,7 @@ server.get('/users/:id', (req, res) => {
 server.post('/login', (req, res) => {
     const userDatas = req.body;
 
-    res.status(200).json({ msg: 'Itt lesz a bejelentkezés...' })
+    res.status(200).json({ success: 'Itt lesz a bejelentkezés...' })
 
 })
 

@@ -1,20 +1,24 @@
-$bg: beige;
+$color1: #e73c7e;
+$color2: #23a6d5;
+$color3: #23d5ab;
+$color4: #f5f5dc;
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
-    //background-color: beige;
-    background-color: $bg;
+    background-size: 30px 30px, 30px 30px;
+    background: linear-gradient(-45deg, $color1, $color2, $color3, $color4);
+    background-size: 400% 400%;
+    animation: gradient 90s ease infinite;
 }
 
-.menuAnim {
-    background-color: #03fca9;
-    transform: scaleY(0%);
-    height: 200px;
-    text-align: center;
-    transition: 0.2s;
-}
-
-.menuOpen {
-    transform: scaleY(100%);
-    transform-origin: top;
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
