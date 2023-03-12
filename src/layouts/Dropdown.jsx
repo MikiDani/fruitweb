@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 
 import { NavLink } from 'react-router-dom';
@@ -8,6 +8,19 @@ function classNames(...classes) {
 }
 
 export default function Dropdown() {
+
+  const [login, setLogin] = useState('')
+
+
+  useEffect (() => {
+    setLogin('Van')
+  })
+
+
+  const handleLogOut = () => {
+    localStorage.setItem('login', null)
+  }
+
   return (
     <Menu as="div" className="relative inline-block text-right">
       <div>
@@ -54,19 +67,22 @@ export default function Dropdown() {
                 </NavLink>
               )}
             </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                  Logout
-                </a>
-              )}
-            </Menu.Item>
+            {login && 
+              <Menu.Item>
+                {({ active }) => (
+                  <NavLink 
+                  onClick={handleLogOut}
+                  to="/"
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm'
+                    )}
+                  >
+                    Logout
+                  </NavLink>
+                )}
+              </Menu.Item>
+            }
           </div>
         </Menu.Items>
       </Transition>

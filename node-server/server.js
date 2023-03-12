@@ -1,4 +1,5 @@
 const log = console.log;
+const crypto = require('crypto'); // hash
 const cors = require('cors');
 const express = require('express');
 const bodyPharser = require('body-parser');
@@ -95,10 +96,81 @@ server.get('/users/:id', (req, res) => {
 })
 
 // LOGIN
-server.post('/login', (req, res) => {
-    const userDatas = req.body;
+server.post('/login', async(req, res) => {
 
-    res.status(200).json({ success: 'Itt lesz a bejelentkezés...' })
+    const usernameOrEmail = req.body.usernameoremail;
+    const password = req.body.password;
+
+    if (usernameOrEmail !== undefined && password !== undefined) {
+        // SEARCH USER IN DATABASE
+        let resData = {}
+        const haveUser = await db.collection('users')
+            .find({
+                $and: [
+                    { password: password },
+                    { $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] }
+                ]
+            })
+            .forEach(data => resData = data)
+            .then(() => {
+                const result = (Object.values(resData).length) ? resData : false;
+                return result
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+
+        if (haveUser) {
+            // SEARCH TOKEN IN DATABESE
+            const objectId = new ObjectId(haveUser._id).valueOf()
+            let resData = {}
+            const haveToken = await db.collection('tokens')
+                .find({ userid: objectId })
+                .forEach(data => resData = data)
+                .then(() => {
+                    const result = (Object.values(resData).length) ? resData : false;
+                    return result
+                })
+                .catch(() => {
+                    res.status(500).json({ error: 'Could not fetch the document.' })
+                })
+
+            const epochStart = Date.now()
+            const epochEnd = Date.now() + 3600
+            const random = (Math.floor(Math.random() * 10) + 1).toString()
+            const token = crypto.createHash('sha1').update(random).digest('hex')
+            const userId = new ObjectId(haveUser._id)
+
+            if (haveToken) {
+                // REFRESH TOKEN IN DATABASE
+                const tokenId = new ObjectId(haveToken._id)
+                db.collection('tokens')
+                    .updateOne({ _id: tokenId }, { $set: { token: token, epochstart: epochStart, epochend: epochEnd } })
+                    .then(result => {
+                        log('update token: ' + token)
+                        res.status(201).json({ success: token, result: result })
+                    })
+                    .catch(err => {
+                        res.status(500).json({ error: 'Could not refresh the user token.', err: err })
+                    })
+            } else {
+                // INSERT TOKEN IN DATABASE
+                db.collection('tokens')
+                    .insertOne({ userid: userId, token: token, epochstart: epochStart, epochend: epochEnd })
+                    .then(result => {
+                        log('inserted token: ' + token)
+                        res.status(201).json({ success: token, result: result })
+                    })
+                    .catch(err => {
+                        res.status(500).json({ error: 'Could not create a new document.' })
+                    })
+            }
+        } else {
+            res.status(400).json({ error: 'Identification error.' })
+        }
+    } else {
+        res.status(400).json({ error: 'Missing inputs.' })
+    }
 
 })
 

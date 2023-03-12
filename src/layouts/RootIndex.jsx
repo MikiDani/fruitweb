@@ -9,7 +9,7 @@ export default function RootIndex() {
   const [menuOpen, setMenuOpen] = useState('hidden')
 
   const hamburgerClick = () => {
-    let value = (menuOpen == 'hidden') ? 'show' : 'hidden'; 
+    let value = (menuOpen === 'hidden') ? 'show' : 'hidden'; 
     setMenuOpen(value);
   }
 
@@ -31,7 +31,7 @@ export default function RootIndex() {
               <span className='block w-8 h-0.5 bg-gray-700 animate-pulse'></span>
             </div>
           </div>
-          <div className='flex mr-1 bg-green-600'>
+          <div className='flex mr-2 bg-green-600'>
             <Dropdown />
           </div>
         </nav>

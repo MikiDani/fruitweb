@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { MdOutlineAppRegistration, MdDeleteForever } from 'react-icons/md'
 import { checkLength, emailCheck } from '../functions'
 
 export default function Registration() {
 
-  const url = 'http://localhost:8080'
-
   const [form, setForm] = useState({})
-  const [msg, setMsg] = useState({ msg:'Teszt', style: 'text-green-600'})
+  const [msg, setMsg] = useState({ msg:'', style: 'text-green-600'})
+
+  const inputUsername = useRef(null)
+  const inputEmail = useRef(null)
+  const inputPassword = useRef(null)
+  const inputRePassword = useRef(null)
+  const inputRobotbutton = useRef({checked: false})
 
   const resetForm = () => {
-    document.querySelector(`#robotbutton`).checked = false
-    const sessionForm = JSON.parse(sessionStorage.getItem('regForm'))
-    if (sessionForm !== null) {
-      Object.keys(sessionForm).map(element => {
-        //console.log(element)
-        document.querySelector(`#${element}`).value = ''
-      })
-    }
+    inputUsername.current.value = ''
+    inputEmail.current.value = ''
+    inputPassword.current.value = ''
+    inputRePassword.current.value = ''
+    inputRobotbutton.current.checked = false
+
     sessionStorage.clear()
     setForm({})
     setMsg({ msg:'', style: ''})
@@ -31,7 +33,6 @@ export default function Registration() {
     }
     setForm(insert)
     sessionStorage.setItem('regForm', JSON.stringify(insert))
-    console.log(insert);
   }
   
   const handleCheck = (e) => {
@@ -41,19 +42,17 @@ export default function Registration() {
     }
     setForm(insert)
     sessionStorage.setItem('regForm', JSON.stringify(insert))
-    console.log(insert);
   }
 
+  // REGISTRATION
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    console.log(form)
 
     let errorMsg = ''
 
     try {
       if (!form.robotbutton) {
-        throw ('Robot button is not checked.')
+        throw new Error ('Robot button is not checked.')
       }
     }
     catch (error) {
@@ -74,7 +73,7 @@ export default function Registration() {
     }
     try {
       if (!emailCheck(form.email)) {
-        throw ('The email is not a valid email address.')
+        throw new Error ('The email is not a valid email address.')
       }
     }
     catch (error) {
@@ -82,7 +81,7 @@ export default function Registration() {
     }
     try {
       if (form.password !== form.repassword) {
-        throw ('The passwords entered do not match.')
+        throw new Error ('The passwords entered do not match.')
       }
     }
     catch (error) {
@@ -90,7 +89,7 @@ export default function Registration() {
     }
 
     if (errorMsg === '') {
-      const response = await fetch('http://localhost:8080/users/add', {
+      const response = await fetch(process.env.REACT_APP_URL+'/users/add', {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
@@ -99,12 +98,12 @@ export default function Registration() {
       })
 
       const resData = await response.json()
-      setMsg({ msg:'valami', style: 'text-green-500'})
+
       Object.keys(resData).forEach(key => {
         if (key === 'error') { setMsg(resData.error) }
         if (key === 'success') { 
-          setMsg({msg: resData.success, style:'text-green-500'})
           resetForm()
+          setMsg({msg: resData.success, style:'text-green-500'})
         }
       })
     } else {
@@ -113,21 +112,22 @@ export default function Registration() {
   }
 
   useEffect(() => {
-    console.log('useEffect');
+    console.log('useEffect...');
     
-    //sessionStorage.clear();
     let sessionForm = JSON.parse(sessionStorage.getItem('regForm'));
-    
+
     if (sessionForm === null) {
-      sessionForm = '';
+      sessionForm = {}
     } else {
-      setForm(sessionForm);
-      document.querySelector(`#robotbutton`).checked = sessionForm.robotbutton
-      Object.keys(sessionForm).map(element => {
-        console.log(element)
-        document.querySelector(`#${element}`).value = sessionForm[element]
-      });
+      setForm(sessionForm)
+      inputUsername.current.value = (sessionForm.username !== undefined) ? sessionForm.username : '';
+      inputEmail.current.value = (sessionForm.email !== undefined) ? sessionForm.email : '';
+      inputPassword.current.value = (sessionForm.password !== undefined) ? sessionForm.password : '';
+      inputRePassword.current.value = (sessionForm.repassword !== undefined) ? sessionForm.repassword : '';
+      inputRobotbutton.current.checked = (sessionForm.username !== undefined) ? sessionForm.robotbutton : '';
     }
+
+    //sessionStorage.clear();
     //console.log('sessionStorage : '); console.log(sessionForm); console.log(form);
 
   }, [])
@@ -150,24 +150,24 @@ export default function Registration() {
           <form className='space-y-4' onSubmit={handleSubmit}>
             <div>
               <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Username</label>
-              <input type='text' name='username' id='username' onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='username' autoComplete='off' required={true} />
+              <input type='text' name='username' id='username' ref={inputUsername} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='username' autoComplete='off' required={true} />
             </div>
             <div>
               <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email</label>
-              <input type='text' name='email' id='email' onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='email' autoComplete='off' required={true} />
+              <input type='text' name='email' id='email' ref={inputEmail} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='email' autoComplete='off' required={true} />
             </div>
             <div>
               <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Password</label>
-              <input type='password' name='password' id='password' onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
+              <input type='password' name='password' id='password' ref={inputPassword} onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
             </div>
             <div>
               <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Repeat password</label>
-              <input type='password' name='repassword' id='repassword' onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
+              <input type='password' name='repassword' id='repassword' ref={inputRePassword} onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
             </div>
             <div className='flex items-center justify-between'>
               <div className='flex items-start'>
                 <div className='flex items-center h-5'>
-                  <input id='robotbutton' name='robotbutton' onChange={handleCheck} aria-describedby='robotbutton' type='checkbox' className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800' />
+                  <input id='robotbutton' name='robotbutton' ref={inputRobotbutton} onChange={handleCheck} aria-describedby='robotbutton' type='checkbox' className='w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800' />
                 </div>
                 <div className='ml-3 text-sm'>
                   <label htmlFor='robotbutton' className='text-gray-500 dark:text-gray-300'>I am not a Robot!</label>
