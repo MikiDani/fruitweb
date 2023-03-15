@@ -1,28 +1,25 @@
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import { useAppContext } from "../variables";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 export default function Dropdown() {
 
-  const { login, setLogin } = useAppContext();
+  const {cookies, setCookie, user, setUser } = useAppContext();
 
-  useEffect (() => {
-    setLogin('Van')
-    console.log('useEffect...')
-  }, [])
+  const navigate = useNavigate();
 
+  const menuStyle = 'bg-gray-100 text-gray-700 block px-4 py-2 text-sm'
 
   const handleLogOut = () => {
     console.log('LOGOUT')
-    setLogin(null)
-    //localStorage.setItem('login', null)
-    localStorage.clear()
+    setUser(null)
+    console.log('cookie:'+ cookies.login)
+    setCookie('login', '', { path: '/' })
+    localStorage.setItem('login', null)
+    navigate("/")
+    //localStorage.clear()
   }
 
   return (
@@ -44,52 +41,31 @@ export default function Dropdown() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {login ? ( 
+            { cookies.login ? ( 
+              <>
               <Menu.Item>
-                {({ active }) => (
-                  <NavLink 
-                  onClick={handleLogOut}
-                  to="/"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm'
-                    )}
-                  >
-                  Logout
-                  </NavLink>
-                )}
+                <NavLink to="/profil" className={ menuStyle } >Profil</NavLink>
               </Menu.Item>
+
+              <Menu.Item>
+                <NavLink to="/admin" className={ menuStyle } >Admin</NavLink>
+              </Menu.Item>
+
+              <Menu.Item>
+                <NavLink to="/" onClick={handleLogOut} className={ menuStyle } >Logout</NavLink>
+              </Menu.Item>
+              </>
             ) : (
               <>
               <Menu.Item>
-              {({ active }) => (
-                <NavLink 
-                  to="/registration"
-                  href="#"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                Registration
-                </NavLink>
+                <NavLink to="/login" className={ menuStyle } >Login</NavLink>
+              </Menu.Item>
+
+              <Menu.Item>
+                <NavLink to="/registration" className={ menuStyle } >Registration</NavLink>
+              </Menu.Item>
+              </>
               )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <NavLink 
-                  to="/login"
-                  className={classNames(
-                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                    'block px-4 py-2 text-sm'
-                  )}
-                >
-                Login
-                </NavLink>
-              )}
-            </Menu.Item>
-            </>
-            )}
           </div>
         </Menu.Items>
       </Transition>

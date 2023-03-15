@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { BiDoorOpen } from "react-icons/bi"
-
+import { loadUserDetails } from "../functions"
 import { useAppContext } from "../variables";
 
 export default function Login() {
@@ -11,16 +11,16 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const { login, setLogin, reload, setReload, setTest } = useAppContext();
+  const { user, setUser, reload, setReload, cookies, setCookie } = useAppContext();
 
   const [form, setForm] = useState({})
   const [users, setUsers] = useState([{}])
-  const [msg, setMsg] = useState({ msg:'', style: 'text-green-600'})
+  const [msg, setMsg] = useState({ msg: '', style: 'text-green-600' })
 
   const inputUsernameOrEmail = useRef(null)
   const inputPassword = useRef(null)
-  const inputRobotbutton = useRef({checked: false})
-  
+  const inputRobotbutton = useRef({ checked: false })
+
   const handleForm = (e) => {
     setForm({
       ...form,
@@ -36,19 +36,19 @@ export default function Login() {
     setForm(insert)
     sessionStorage.setItem('regForm', JSON.stringify(insert))
   }
-  
+
   // DELETE USER
   const handleDelete = async (e, delId) => {
-    const response = await fetch(process.env.REACT_APP_URL+'/users/'+delId, {
+    const response = await fetch(process.env.REACT_APP_URL + '/users/' + delId, {
       method: 'DELETE'
     })
 
     const resData = await response.json()
-    
+
     Object.keys(resData).forEach(key => {
-      if (key === 'deletedCount') { 
+      if (key === 'deletedCount') {
         if (resData.deletedCount === 0) {
-          setMsg('Nothing delete.');
+          setMsg({ msg: 'Nothing delete.', style: 'text-orange-500' });
         } else {
           setReload(true);
         }
@@ -57,16 +57,14 @@ export default function Login() {
   }
 
   const handleReload = async () => {
-    setMsg('LOGIN handlereload');
-    console.log('RELOAD BUTTONNÁL');
-    
-    const d = new Date();
-    let time = d.getTime();
+    setMsg({ msg: cookies.login, style: 'text-orange-500' });
+    console.log(cookies.login);
 
-    setTest(time)
-    //setReload(true);
+    //const d = new Date(); let time = d.getTime();
+    setReload(true);
   }
 
+  // LOGIN
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -74,7 +72,7 @@ export default function Login() {
 
     try {
       if (!form.robotbutton) {
-        throw new Error ('Robot button is not checked.')
+        throw new Error('Robot button is not checked.')
       }
     }
     catch (error) {
@@ -83,7 +81,7 @@ export default function Login() {
 
     if (errorMsg === '') {
 
-      const response = await fetch(process.env.REACT_APP_URL+'/login', {
+      const response = await fetch(process.env.REACT_APP_URL + '/login', {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
@@ -94,27 +92,27 @@ export default function Login() {
       const resData = await response.json()
 
       Object.keys(resData).forEach(key => {
-        if (key === 'error') { setMsg({ msg:resData.error, style: 'text-red-600'}) }
-        if (key === 'success') { 
-          setMsg({msg: resData.success, style:'text-green-500'})
+        if (key === 'error') { setMsg({ msg: resData.error, style: 'text-red-600' }) }
+        if (key === 'success') {
+          setMsg({ msg: resData.success, style: 'text-green-500' })
           inputUsernameOrEmail.current.value = ''
           inputPassword.current.value = ''
           inputRobotbutton.current.checked = false
 
-          localStorage.setItem('login', JSON.stringify(resData.success))
-          setLogin(resData.success)
-          setReload(true)
+          // LOGIN KOOKIE
+          setCookie('login', resData.success, { path: '/' });
+          loadUserDetails(resData.success)
           navigate("/")
         }
       })
 
     } else {
-      setMsg({ msg: errorMsg, style: 'text-red-600'})
+      setMsg({ msg: errorMsg, style: 'text-red-600' })
     }
   }
 
   const getUsers = async () => {
-    const response = await fetch(process.env.REACT_APP_URL+'/allusers', {
+    const response = await fetch(process.env.REACT_APP_URL + '/allusers', {
       method: 'GET'
     });
 
@@ -125,25 +123,24 @@ export default function Login() {
   useEffect(() => {
     console.log('useEffect... login');
 
-    if (login) { navigate("/") }
-    
+    if (cookies.login) { navigate("/") }
+
     getUsers();
     setReload(false)
-    
+
   }, [reload]);
 
   return (
     <>
+    {!cookies.login && (
+      <>
       <div className="flex justify-start bg-white">
         <div className="w-full lg:w-1/2 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto">
           <div className="p-6 space-y-4">
-            <>
-            { login && <h3>{login}</h3> }
-            </>
+            <> {user && <h3>{user}</h3>} </>
             <h1 className="font-bold text-gray-900 text-2xl dark:text-white">
               Login
             </h1>
-            
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username or email</label>
@@ -179,35 +176,37 @@ export default function Login() {
           </div>
         </div>
       </div>
-        <div className="w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto mt-5">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" className="px-6 py-3"></th>
-                        <th scope="col" className="px-6 py-3">Username</th>
-                        <th scope="col" className="px-6 py-3">Email</th>
-                        <th scope="col" className="px-6 py-3">RANK</th>
-                        <th scope="col" className="px-6 py-3">PASSWORD</th>
-                        <th scope="col" className="px-6 py-3"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                      <tr key={user._id+user.username} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"></th>
-                          <td className="px-6 py-4">{user.username}</td>
-                          <td className="px-6 py-4">{user.email}</td>
-                          <td className="px-6 py-4">{user.rank}</td>
-                          <td className="px-6 py-4">{user.password}</td>
-                          <td className="px-6 py-4"><button className="bg-orange-500 text-white w-full rounded-lg p-0.5 hover:bg-red-600" onClick={((e) => handleDelete(e, user._id))}>delete</button></td>
-                      </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="p-3">
-              <button className="p-3 bg-purple-400" onClick={handleReload}>Reload button</button>
-            </div>
+      <div className="w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto mt-5">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3"></th>
+              <th scope="col" className="px-6 py-3">Username</th>
+              <th scope="col" className="px-6 py-3">Email</th>
+              <th scope="col" className="px-6 py-3">RANK</th>
+              <th scope="col" className="px-6 py-3">PASSWORD</th>
+              <th scope="col" className="px-6 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id + user.username} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"></th>
+                <td className="px-6 py-4">{user.username}</td>
+                <td className="px-6 py-4">{user.email}</td>
+                <td className="px-6 py-4">{user.rank}</td>
+                <td className="px-6 py-4">{user.password}</td>
+                <td className="px-6 py-4"><button className="bg-orange-500 text-white w-full rounded-lg p-0.5 hover:bg-red-600" onClick={((e) => handleDelete(e, user._id))}>delete</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="p-3">
+          <button className="p-3 bg-purple-400" onClick={handleReload}>Reload button</button>
         </div>
+      </div>
+      </>
+    )}
     </>
   )
 }

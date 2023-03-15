@@ -7,22 +7,24 @@ import MenuList from './MenuList'
 
 export default function RootIndex() {
   
-  const { login, setLogin, reload, setReload, test, setTest } = useAppContext()
+  const { user, setUser, reload, setReload, cookies, setCookies } = useAppContext()
   const [menuOpen, setMenuOpen] = useState('hidden')
 
   useEffect(() => {
     console.log('useEffect... ROOT INDEX');
-    console.log('testnél....'+ test);
 
-    let loginVariable = (localStorage.getItem('login')) ? localStorage.getItem('login') : '';
-    if (loginVariable) {
-      console.log('loginVariable:'+ loginVariable)
-      setLogin(localStorage.getItem('login'))
+    console.log('cookie valós értéke: '+ cookies.login)
+    
+    let loginCookie = (cookies.login) ? cookies.login : null;
+    if (loginCookie) {
+      console.log('ROOT SET cookie :'+ cookies.login)
+      // !!!!! LOAD USER DATAS
+      setUser('kissbela')
     }
 
     setReload(false)
 
-  }, [reload, test]);
+  }, []);
 
   const hamburgerClick = () => {
     let value = (menuOpen === 'hidden') ? 'show' : 'hidden'; 
@@ -31,7 +33,8 @@ export default function RootIndex() {
 
   return (
     <div className='container max-w-4xl mx-auto px-0'>
-      {login}
+      <div>user: {user} </div>
+      <div>cookie: {cookies.login} </div>
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-slate-400 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>

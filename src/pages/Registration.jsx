@@ -7,7 +7,7 @@ import { useAppContext } from '../variables'
 
 export default function Registration() {
 
-  const { login } = useAppContext()
+  const { cookies, login } = useAppContext()
   const navigate = useNavigate()
 
   const [form, setForm] = useState({})
@@ -118,8 +118,12 @@ export default function Registration() {
 
   useEffect(() => {
     console.log('useEffect...');
+    console.log('cookies: '+ cookies.login);
 
-    if (login) { navigate("/") }
+    if (cookies.login) { 
+      sessionStorage.setItem('regForm', null)
+      navigate("/") 
+    }
     
     let sessionForm = JSON.parse(sessionStorage.getItem('regForm'));
 
@@ -140,7 +144,9 @@ export default function Registration() {
   }, [])
 
   return (
-    <div className='flex justify-start bg-white'>      
+    <>
+    { !cookies.login && ( 
+      <div className='flex justify-start bg-white'>      
       <div className='hidden lg:block w-1/2 rounded'>
         <div className='h-full flex justify-center items-center'>
           <MdOutlineAppRegistration size='20rem' color='orange' opacity='0.5' />
@@ -194,5 +200,7 @@ export default function Registration() {
         </div>
       </div>
     </div>
+    ) }
+    </>
   )
 }

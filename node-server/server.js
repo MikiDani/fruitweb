@@ -3,7 +3,7 @@ const crypto = require('crypto'); // hash
 const cors = require('cors');
 const express = require('express');
 const bodyPharser = require('body-parser');
-const { connectToDb, getDb, danika } = require('./db');
+const { connectToDb, getDb } = require('./db');
 const { ObjectId } = require('mongodb');
 const functions = require('./functions');
 
@@ -76,8 +76,8 @@ server.get('/pageusers', (req, res) => {
         })
 })
 
-// ONE USER DATAS
-server.get('/users/:id', (req, res) => {
+// ONE USER DATAS :ID
+server.get('/users/id/:id', (req, res) => {
 
     if (ObjectId.isValid(req.params.id)) {
         const objectId = new ObjectId(req.params.id);
@@ -92,6 +92,44 @@ server.get('/users/:id', (req, res) => {
             })
     } else {
         res.status(500).json({ error: 'Not a valid id.' })
+    }
+})
+
+// ONE USER DATAS :TOKEN
+server.get('/users/token/:token', async(req, res) => {
+
+    console.log(req.params.token)
+    let haveTokenUserId = false
+
+    haveTokenUserId = await db.collection('tokens')
+        .findOne({ token: req.params.token })
+        .then((data) => {
+            return data.userid
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the document.' })
+        })
+
+    if (haveTokenUserId) {
+
+        console.log('haveTokenUserId: ' + haveTokenUserId)
+        const objectId = new ObjectId(haveTokenUserId)
+        console.log('objectId: ' + objectId)
+
+        let userData = await db.collection('users')
+            .findOne({ _id: objectId })
+            .then((data) => {
+                return data
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+
+        console.log(userData)
+        res.status(200).json(userData)
+
+    } else {
+        res.status(400).json({ error: 'No have user this token.' })
     }
 })
 
