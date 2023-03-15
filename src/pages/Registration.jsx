@@ -1,9 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { MdOutlineAppRegistration, MdDeleteForever } from 'react-icons/md'
 import { checkLength, emailCheck } from '../functions'
 
+import { useAppContext } from '../variables'
+
 export default function Registration() {
+
+  const { login } = useAppContext()
+  const navigate = useNavigate()
 
   const [form, setForm] = useState({})
   const [msg, setMsg] = useState({ msg:'', style: 'text-green-600'})
@@ -113,6 +118,8 @@ export default function Registration() {
 
   useEffect(() => {
     console.log('useEffect...');
+
+    if (login) { navigate("/") }
     
     let sessionForm = JSON.parse(sessionStorage.getItem('regForm'));
 

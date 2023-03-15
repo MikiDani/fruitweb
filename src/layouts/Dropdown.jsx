@@ -1,7 +1,8 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
-
 import { NavLink } from 'react-router-dom';
+
+import { useAppContext } from "../variables";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -9,23 +10,26 @@ function classNames(...classes) {
 
 export default function Dropdown() {
 
-  const [login, setLogin] = useState('')
-
+  const { login, setLogin } = useAppContext();
 
   useEffect (() => {
     setLogin('Van')
-  })
+    console.log('useEffect...')
+  }, [])
 
 
   const handleLogOut = () => {
-    localStorage.setItem('login', null)
+    console.log('LOGOUT')
+    setLogin(null)
+    //localStorage.setItem('login', null)
+    localStorage.clear()
   }
 
   return (
     <Menu as="div" className="relative inline-block text-right">
       <div>
         <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-          User
+          Login
         </Menu.Button>
       </div>
 
@@ -40,7 +44,24 @@ export default function Dropdown() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <Menu.Item>
+            {login ? ( 
+              <Menu.Item>
+                {({ active }) => (
+                  <NavLink 
+                  onClick={handleLogOut}
+                  to="/"
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block px-4 py-2 text-sm'
+                    )}
+                  >
+                  Logout
+                  </NavLink>
+                )}
+              </Menu.Item>
+            ) : (
+              <>
+              <Menu.Item>
               {({ active }) => (
                 <NavLink 
                   to="/registration"
@@ -50,7 +71,7 @@ export default function Dropdown() {
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  Registration
+                Registration
                 </NavLink>
               )}
             </Menu.Item>
@@ -63,26 +84,12 @@ export default function Dropdown() {
                     'block px-4 py-2 text-sm'
                   )}
                 >
-                  Login
+                Login
                 </NavLink>
               )}
             </Menu.Item>
-            {login && 
-              <Menu.Item>
-                {({ active }) => (
-                  <NavLink 
-                  onClick={handleLogOut}
-                  to="/"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm'
-                    )}
-                  >
-                    Logout
-                  </NavLink>
-                )}
-              </Menu.Item>
-            }
+            </>
+            )}
           </div>
         </Menu.Items>
       </Transition>

@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useRef } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { BiDoorOpen } from "react-icons/bi"
+
+import { useAppContext } from "../variables";
 
 export default function Login() {
 
   //const url = "http://localhost:8080";
   //console.log(process.env.REACT_APP_URL)
 
-  const [login, setLogin] = useState(null)
-  const [reload, setReload] = useState(false)
+  const navigate = useNavigate();
+
+  const { login, setLogin, reload, setReload, setTest } = useAppContext();
+
   const [form, setForm] = useState({})
   const [users, setUsers] = useState([{}])
   const [msg, setMsg] = useState({ msg:'', style: 'text-green-600'})
@@ -33,6 +37,7 @@ export default function Login() {
     sessionStorage.setItem('regForm', JSON.stringify(insert))
   }
   
+  // DELETE USER
   const handleDelete = async (e, delId) => {
     const response = await fetch(process.env.REACT_APP_URL+'/users/'+delId, {
       method: 'DELETE'
@@ -45,11 +50,21 @@ export default function Login() {
         if (resData.deletedCount === 0) {
           setMsg('Nothing delete.');
         } else {
-          setMsg('User deleted!');
           setReload(true);
         }
       }
     })
+  }
+
+  const handleReload = async () => {
+    setMsg('LOGIN handlereload');
+    console.log('RELOAD BUTTONNÁL');
+    
+    const d = new Date();
+    let time = d.getTime();
+
+    setTest(time)
+    //setReload(true);
   }
 
   const handleSubmit = async (e) => {
@@ -88,6 +103,8 @@ export default function Login() {
 
           localStorage.setItem('login', JSON.stringify(resData.success))
           setLogin(resData.success)
+          setReload(true)
+          navigate("/")
         }
       })
 
@@ -106,16 +123,13 @@ export default function Login() {
   }
 
   useEffect(() => {
-    console.log('useEffect...');
+    console.log('useEffect... login');
 
-    let loginVariable = (localStorage.getItem('login')) ? localStorage.getItem('login') : '';
-    if (loginVariable) {
-      console.log(loginVariable)
-      setLogin(localStorage.getItem('login'))
-    }
-
-    setReload(false)
+    if (login) { navigate("/") }
+    
     getUsers();
+    setReload(false)
+    
   }, [reload]);
 
   return (
@@ -190,6 +204,9 @@ export default function Login() {
                     ))}
                 </tbody>
             </table>
+            <div className="p-3">
+              <button className="p-3 bg-purple-400" onClick={handleReload}>Reload button</button>
+            </div>
         </div>
     </>
   )

@@ -1,12 +1,28 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useAppContext } from '../variables'
+
 import Dropdown from './Dropdown'
 import MenuList from './MenuList'
 
 export default function RootIndex() {
-
+  
+  const { login, setLogin, reload, setReload, test, setTest } = useAppContext()
   const [menuOpen, setMenuOpen] = useState('hidden')
+
+  useEffect(() => {
+    console.log('useEffect... ROOT INDEX');
+    console.log('testnél....'+ test);
+
+    let loginVariable = (localStorage.getItem('login')) ? localStorage.getItem('login') : '';
+    if (loginVariable) {
+      console.log('loginVariable:'+ loginVariable)
+      setLogin(localStorage.getItem('login'))
+    }
+
+    setReload(false)
+
+  }, [reload, test]);
 
   const hamburgerClick = () => {
     let value = (menuOpen === 'hidden') ? 'show' : 'hidden'; 
@@ -15,6 +31,7 @@ export default function RootIndex() {
 
   return (
     <div className='container max-w-4xl mx-auto px-0'>
+      {login}
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-slate-400 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>
