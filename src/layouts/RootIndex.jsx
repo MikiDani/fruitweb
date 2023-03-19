@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useAppContext } from '../variables'
+import { loadUserDetails } from "../functions"
 
 import Dropdown from './Dropdown'
 import MenuList from './MenuList'
@@ -11,18 +12,33 @@ export default function RootIndex() {
   const [menuOpen, setMenuOpen] = useState('hidden')
 
   useEffect(() => {
-    console.log('useEffect... ROOT INDEX');
+    setReload(false)
+
+    console.log('useEffect... ROOT INDEX')
 
     console.log('cookie valós értéke: '+ cookies.login)
     
     let loginCookie = (cookies.login) ? cookies.login : null;
     if (loginCookie) {
       console.log('ROOT SET cookie :'+ cookies.login)
-      // !!!!! LOAD USER DATAS
-      setUser('kissbela')
+      /*
+      (async () => {
+        let userData = await loadUserDetails(cookies.login)    
+        
+        setUser({
+          username: userData.username,
+          email: userData.email,
+          rank: userData.rank,
+        })
+
+      })
+      */
+      
     }
 
-    setReload(false)
+    console.log('username: ' + user.username)
+    console.log('email: ' + user.email)
+    console.log('rank: ' + user.rank)
 
   }, []);
 
@@ -33,7 +49,7 @@ export default function RootIndex() {
 
   return (
     <div className='container max-w-4xl mx-auto px-0'>
-      <div>user: {user} </div>
+      <div>user: {user.username} </div>
       <div>cookie: {cookies.login} </div>
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-slate-400 text-center rounded-t-lg'>

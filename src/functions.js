@@ -1,3 +1,5 @@
+const log = console.log;
+
 export function checkLength(textName, textValue, textMin, textMax) {
     if (typeof textValue == 'undefined') {
         throw new Error('The ' + textName + ' is empty.');
@@ -15,27 +17,13 @@ export function emailCheck(email) {
     return re.test(email);
 }
 
+// LOAD USER DETAILS
 export async function loadUserDetails(token) {
-    console.log('user details:')
-        // DELETE USER
 
-    const response = await fetch(process.env.REACT_APP_URL + '/users/' + token, {
+    const response = await fetch(process.env.REACT_APP_URL + '/users/token/' + token, {
         method: 'GET'
     })
 
     const resData = await response.json()
-
     return resData;
-
-    /*
-    Object.keys(resData).forEach(key => {
-      if (key === 'deletedCount') {
-        if (resData.deletedCount === 0) {
-          setMsg({ msg: 'Nothing delete.', style: 'text-orange-500' });
-        } else {
-          setReload(true);
-        }
-      }
-    })
-    */
 }

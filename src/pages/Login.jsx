@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { BiDoorOpen } from "react-icons/bi"
-import { loadUserDetails } from "../functions"
 import { useAppContext } from "../variables";
 
 export default function Login() {
@@ -98,10 +97,8 @@ export default function Login() {
           inputUsernameOrEmail.current.value = ''
           inputPassword.current.value = ''
           inputRobotbutton.current.checked = false
-
           // LOGIN KOOKIE
           setCookie('login', resData.success, { path: '/' });
-          loadUserDetails(resData.success)
           navigate("/")
         }
       })
@@ -137,7 +134,6 @@ export default function Login() {
       <div className="flex justify-start bg-white">
         <div className="w-full lg:w-1/2 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto">
           <div className="p-6 space-y-4">
-            <> {user && <h3>{user}</h3>} </>
             <h1 className="font-bold text-gray-900 text-2xl dark:text-white">
               Login
             </h1>

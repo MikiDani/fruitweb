@@ -6,7 +6,7 @@ import { useAppContext } from "../variables";
 
 export default function MenuList({display}) {
   
-  const { login, setLogin } = useAppContext();
+  const { cookies, login } = useAppContext()
 
   let design = 'hover:font-bold';
   
@@ -15,7 +15,7 @@ export default function MenuList({display}) {
       <div className={`${display} ${design}`}><BsFill1CircleFill className='inline-block' /><span className='ml-2 mr-2'><NavLink to='/'>Home</NavLink></span></div>
       <div className={`${display} ${design}`}><BsFill2CircleFill className='inline-block' /><span className='ml-2 mr-2'><NavLink to='/about'>About</NavLink></span></div>
       <div className={`${display} ${design}`}><BsFill3CircleFill className='inline-block' /><span className='ml-2 mr-2'><NavLink to='/game'>Game</NavLink></span></div>
-      {login ? (
+      {cookies.login ? (
         <div className={`${display} ${design}`}><BsFill4CircleFill className='inline-block' /><span className='ml-2 mr-2'><NavLink to='/profil'>Profil</NavLink></span></div>
         ) : (
           <>

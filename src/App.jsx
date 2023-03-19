@@ -19,7 +19,7 @@ function App() {
  
   const [cookies, setCookie] = useCookies(['login']);
   
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState({});
   const [reload, setReload] = useState(false);
 
   return (
