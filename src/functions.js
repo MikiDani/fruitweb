@@ -25,5 +25,12 @@ export async function loadUserDetails(token) {
     })
 
     const resData = await response.json()
-    return resData;
+
+    const userData = {
+        username: resData.username,
+        email: resData.email,
+        rank: resData.rank,
+    }
+
+    return userData;
 }

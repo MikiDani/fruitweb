@@ -16,13 +16,18 @@ export default function Dropdown() {
     console.log('LOGOUT')
     setUser({})
     setCookie('login', '', { path: '/' })
+    sessionStorage.setItem('regForm', null)
     navigate("/")
   }
+
+  let buttonStyle = "inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50";
+
+  let buttonStyleBg = (user.username) ? ' bg-green-400 hover:bg-green-500' : ''; 
 
   return (
     <Menu as="div" className="relative inline-block text-right">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <Menu.Button className={`${buttonStyle} ${buttonStyleBg}`}>
           {user.username ? (<>{user.username}</>) : (<>Login</>)}
         </Menu.Button>
       </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { NavLink, useNavigate } from "react-router-dom"
 import { BiDoorOpen } from "react-icons/bi"
 import { useAppContext } from "../variables";
+import { loadUserDetails } from "../functions";
 
 export default function Login() {
 
@@ -19,6 +20,28 @@ export default function Login() {
   const inputUsernameOrEmail = useRef(null)
   const inputPassword = useRef(null)
   const inputRobotbutton = useRef({ checked: false })
+
+  useEffect(() => {
+    console.log('useEffect... login');
+    if (cookies.login) { navigate("/") }
+    let users = [{
+      username: 'semmi',
+      email: 'semmi',
+      rank: 'semmi',
+      password: 'semmi'
+    }, 
+    {
+      username: 'semmi2',
+      email: 'semmi2',
+      rank: 'semmi2',
+      password: 'semmi2'
+    }]
+
+    //getUsers();     !!!!!
+
+    setReload(false)
+
+  }, [reload]);
 
   const handleForm = (e) => {
     setForm({
@@ -58,9 +81,25 @@ export default function Login() {
   const handleReload = async () => {
     setMsg({ msg: cookies.login, style: 'text-orange-500' });
     console.log(cookies.login);
-
     //const d = new Date(); let time = d.getTime();
     setReload(true);
+  }
+
+  const getUsers = async () => {
+    const response = await fetch(process.env.REACT_APP_URL + '/allusers', {
+      method: 'GET'
+    });
+    const data = await response.json()
+    setUsers(data)
+  }
+
+  const getUserData = async (cookie) => {
+    console.log('get user data: cookie: '+cookie)
+    if (cookie) { 
+      let userData = await loadUserDetails(cookie)
+      setUser(userData)
+      //setReload(true)
+    }
   }
 
   // LOGIN
@@ -90,42 +129,27 @@ export default function Login() {
 
       const resData = await response.json()
 
+      let setLoginSwitch = false;
       Object.keys(resData).forEach(key => {
         if (key === 'error') { setMsg({ msg: resData.error, style: 'text-red-600' }) }
-        if (key === 'success') {
-          setMsg({ msg: resData.success, style: 'text-green-500' })
-          inputUsernameOrEmail.current.value = ''
-          inputPassword.current.value = ''
-          inputRobotbutton.current.checked = false
-          // LOGIN KOOKIE
-          setCookie('login', resData.success, { path: '/' });
-          navigate("/")
-        }
+        if (key === 'success') { setLoginSwitch = true; }
       })
+      
+      if (setLoginSwitch) {
+        setMsg({ msg: resData.success, style: 'text-green-500' })
+        inputUsernameOrEmail.current.value = ''
+        inputPassword.current.value = ''
+        inputRobotbutton.current.checked = false
+        // LOGIN KOOKIE
+        setCookie('login', resData.success, { path: '/' });
+        await getUserData(resData.success)
+        navigate("/")
+      }
 
     } else {
       setMsg({ msg: errorMsg, style: 'text-red-600' })
     }
   }
-
-  const getUsers = async () => {
-    const response = await fetch(process.env.REACT_APP_URL + '/allusers', {
-      method: 'GET'
-    });
-
-    const data = await response.json()
-    setUsers(data)
-  }
-
-  useEffect(() => {
-    console.log('useEffect... login');
-
-    if (cookies.login) { navigate("/") }
-
-    getUsers();
-    setReload(false)
-
-  }, [reload]);
 
   return (
     <>
@@ -197,8 +221,8 @@ export default function Login() {
             ))}
           </tbody>
         </table>
-        <div className="p-3">
-          <button className="p-3 bg-purple-400" onClick={handleReload}>Reload button</button>
+        <div className="p-3 text-center">
+          <button className="w-full bg-purple-400 text-sm py-2.5 rounded-lg" onClick={handleReload}>Reload button</button>
         </div>
       </div>
       </>

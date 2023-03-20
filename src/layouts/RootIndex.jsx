@@ -13,32 +13,25 @@ export default function RootIndex() {
 
   useEffect(() => {
     setReload(false)
-
     console.log('useEffect... ROOT INDEX')
-
-    console.log('cookie valós értéke: '+ cookies.login)
     
     let loginCookie = (cookies.login) ? cookies.login : null;
     if (loginCookie) {
-      console.log('ROOT SET cookie :'+ cookies.login)
-      /*
-      (async () => {
-        let userData = await loadUserDetails(cookies.login)    
-        
-        setUser({
-          username: userData.username,
-          email: userData.email,
-          rank: userData.rank,
-        })
-
-      })
-      */
-      
+      console.log('cookie valós értéke:'+ cookies.login)
+      fetch(process.env.REACT_APP_URL + '/users/token/' + cookies.login, { method: 'GET' })
+        .then((response) => response.json())
+        .then((resData) => {
+          console.log(resData)
+          const userData = {
+              id : resData._id,
+              username: resData.username,
+              email: resData.email,
+              rank: resData.rank,
+          }
+          // insert user datas
+          setUser(userData)
+        })      
     }
-
-    console.log('username: ' + user.username)
-    console.log('email: ' + user.email)
-    console.log('rank: ' + user.rank)
 
   }, []);
 
@@ -56,11 +49,11 @@ export default function RootIndex() {
           <div className='bg-orange-400 rounded-tl-lg'>
             <h3 className='p-3 font-bold'>FruitWeb</h3>
           </div>
-          <div className='hidden lg:flex'>
+          <div className='hidden md:flex'>
             <MenuList display={'inline ml-5'} />
           </div>
 
-          <div className='flex lg:hidden' onClick={hamburgerClick}>
+          <div className='flex md:hidden' onClick={hamburgerClick}>
             <div className='space-y-2'>
               <span className='block w-8 h-0.5 bg-gray-700 animate-pulse'></span>
               <span className='block w-8 h-0.5 bg-gray-700 animate-pulse'></span>
@@ -71,7 +64,7 @@ export default function RootIndex() {
             <Dropdown />
           </div>
         </nav>
-        <div className={`${menuOpen} lg:hidden bg-gray-300 text-center p-4 space-y-4`}>
+        <div className={`${menuOpen} md:hidden bg-gray-300 text-center p-4 space-y-4`}>
           <MenuList display={'block'} />
         </div>
       </header>

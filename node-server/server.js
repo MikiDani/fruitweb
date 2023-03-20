@@ -29,109 +29,8 @@ connectToDb((error) => {
     }
 })
 
-// routes
-
-// ALL USERS LIST
-server.get('/allusers', (req, res) => {
-    // current page
-    const page = req.query.p || 0
-    const userPerPage = 2
-
-    //log('page: ' + page);
-
-    let users = [];
-
-    db.collection('users')
-        .find()
-        .sort({ username: 1 })
-        .forEach(user => users.push(user))
-        .then(() => {
-            res.status(200).json(users)
-        })
-        .catch(() => {
-            res.status(500).json({ error: 'Could not fetch the document.' })
-        })
-})
-
-// USERS / PAGES
-server.get('/pageusers', (req, res) => {
-    const page = req.query.p || 0
-    const userPerPage = 2
-
-    //log('page: ' + page);
-
-    let users = []
-
-    db.collection('users')
-        .find()
-        .sort({ username: 1 })
-        .skip(page * userPerPage)
-        .limit(userPerPage)
-        .forEach(user => users.push(user))
-        .then(() => {
-            res.status(200).json(users)
-        })
-        .catch(() => {
-            res.status(500).json({ error: 'Could not fetch the document.' })
-        })
-})
-
-// ONE USER DATAS :ID
-server.get('/users/id/:id', (req, res) => {
-
-    if (ObjectId.isValid(req.params.id)) {
-        const objectId = new ObjectId(req.params.id);
-
-        db.collection('users')
-            .findOne({ _id: objectId })
-            .then((data) => {
-                res.status(200).json(data)
-            })
-            .catch(() => {
-                res.status(500).json({ error: 'Could not fetch the document.' })
-            })
-    } else {
-        res.status(500).json({ error: 'Not a valid id.' })
-    }
-})
-
-// ONE USER DATAS :TOKEN
-server.get('/users/token/:token', async(req, res) => {
-
-    console.log(req.params.token)
-    let haveTokenUserId = false
-
-    haveTokenUserId = await db.collection('tokens')
-        .findOne({ token: req.params.token })
-        .then((data) => {
-            return data.userid
-        })
-        .catch(() => {
-            res.status(500).json({ error: 'Could not fetch the document.' })
-        })
-
-    if (haveTokenUserId) {
-
-        console.log('haveTokenUserId: ' + haveTokenUserId)
-        const objectId = new ObjectId(haveTokenUserId)
-        console.log('objectId: ' + objectId)
-
-        let userData = await db.collection('users')
-            .findOne({ _id: objectId })
-            .then((data) => {
-                return data
-            })
-            .catch(() => {
-                res.status(500).json({ error: 'Could not fetch the document.' })
-            })
-
-        console.log(userData)
-        res.status(200).json(userData)
-
-    } else {
-        res.status(400).json({ error: 'No have user this token.' })
-    }
-})
+//----------------
+// no autentication : LOGIN and REGISTRATION
 
 // LOGIN
 server.post('/login', async(req, res) => {
@@ -174,7 +73,7 @@ server.post('/login', async(req, res) => {
                 })
 
             const epochStart = Date.now()
-            const epochEnd = Date.now() + 3600
+            const epochEnd = (parseInt(Date.now()) + parseInt(28800))
             const random = (Math.floor(Math.random() * 10) + 1).toString()
             const token = crypto.createHash('sha1').update(random).digest('hex')
             const userId = new ObjectId(haveUser._id)
@@ -247,6 +146,116 @@ server.post('/users/add', async(req, res) => {
     }
 })
 
+//---------------------
+// HAVE autentication :
+
+// ALL USERS LIST
+server.get('/allusers', async(req, res) => {
+    // current page
+
+    if (req.headers.token && await authorize(req.headers.token)) {
+
+        console.log("BENT!!!")
+        console.log(req.headers.token)
+
+        let users = [];
+
+        db.collection('users')
+            .find()
+            .sort({ username: 1 })
+            .forEach(user => users.push(user))
+            .then(() => {
+                res.status(200).json(users)
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+
+    } else {
+        res.status(400).json({ error: 'You are not authorized!' })
+    }
+
+})
+
+// USERS / PAGES
+server.get('/pageusers', (req, res) => {
+    const page = req.query.p || 0
+    const userPerPage = 2
+
+    //log('page: ' + page);
+
+    let users = []
+
+    db.collection('users')
+        .find()
+        .sort({ username: 1 })
+        .skip(page * userPerPage)
+        .limit(userPerPage)
+        .forEach(user => users.push(user))
+        .then(() => {
+            res.status(200).json(users)
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the document.' })
+        })
+})
+
+// ONE USER DATAS :ID
+server.get('/users/id/:id', (req, res) => {
+
+    if (ObjectId.isValid(req.params.id)) {
+        const objectId = new ObjectId(req.params.id);
+
+        db.collection('users')
+            .findOne({ _id: objectId })
+            .then((data) => {
+                res.status(200).json(userDataLoad(data))
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+    } else {
+        res.status(500).json({ error: 'Not a valid id.' })
+    }
+})
+
+// ONE USER DATAS :TOKEN
+server.get('/users/token/:token', async(req, res) => {
+
+    console.log(req.params.token)
+    let haveTokenUserId = false
+
+    haveTokenUserId = await db.collection('tokens')
+        .findOne({ token: req.params.token })
+        .then((data) => {
+            if (data) {
+                return data.userid;
+            } else {
+                return false;
+            }
+        })
+    if (haveTokenUserId) {
+
+        const objectId = new ObjectId(haveTokenUserId)
+        console.log('objectId: ' + objectId)
+
+        let userData = await db.collection('users')
+            .findOne({ _id: objectId })
+            .then((data) => {
+                return data
+            })
+            .catch(() => {
+                res.status(500).json({ error: 'Could not fetch the document.' })
+            })
+
+        console.log(userData)
+        res.status(200).json(userDataLoad(userData))
+
+    } else {
+        res.status(400).json({ error: 'No have user this token.' })
+    }
+})
+
 // DELETE USER
 server.delete('/users/:id', (req, res) => {
 
@@ -292,6 +301,67 @@ server.patch('/users/:id', (req, res) => {
 ////////////////////////////
 // Database use Functions //
 ////////////////////////////
+
+authorize = async(token) => {
+
+    let returnValue = false;
+
+    console.log(token)
+
+    let haveToken = await db.collection('tokens')
+        .findOne({ token: token })
+        .then((data) => {
+            if (data) { return data; } else { return false; }
+        })
+        .catch(() => {
+            res.status(500).json({ error: 'Could not fetch the document.' })
+        })
+
+    if (haveToken) {
+        console.log('VAN TOKEN!!!')
+        console.log(haveToken)
+
+        let nowEpoch = Date.now()
+
+        let datenow = new Date(nowEpoch);
+        let dateend = new Date(haveToken.epochend);
+
+        console.log('now: ' + nowEpoch)
+        console.log('end: ' + haveToken.epochend)
+        console.log('nowd: ' + datenow)
+        console.log('endd: ' + dateend)
+
+        if (nowEpoch < haveToken.epochend) {
+            // token is correct!
+            console.log('JÓ A TOKEN TRUE!!!')
+            returnValue = true;
+        } else {
+            // token era has expired. Token deleting
+            returnValue = false;
+            const tokenId = new ObjectId(haveToken._id)
+            db.collection('tokens')
+                .deleteOne({ _id: tokenId })
+                .then(result => {
+                    console.log('Token deleted. result: ' + result)
+                })
+        }
+    } else {
+        console.log('NINCSEN TOKEN!!!')
+    }
+
+    return returnValue;
+}
+
+userDataLoad = (data) => {
+    const returnUserData = {
+        _id: data._id,
+        username: data.username,
+        email: data.email,
+        rank: data.rank
+    }
+
+    return returnUserData
+}
 
 checkValue = async(db, database, rowKey, rowValue) => {
 

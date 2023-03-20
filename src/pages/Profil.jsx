@@ -14,21 +14,14 @@ function Profil() {
     if (!cookies.login) { navigate('/') }
   }, [])
 
+  // reload user data
   const handleReload = async () => {
     console.log('cookie: ')
     console.log(cookies.login);
 
-    let userData = await loadUserDetails(cookies.login)    
-    setUser({
-      username: userData.username,
-      email: userData.email,
-      rank: userData.rank,
-    })
-
+    let userData = await loadUserDetails(cookies.login)
+    setUser(userData)
     setReload(true)
-
-    //const d = new Date(); let time = d.getTime();
-    //setReload(true);
   }
 
   return (
