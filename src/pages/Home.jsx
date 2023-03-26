@@ -17,6 +17,7 @@ export default function Home() {
       <div className='pl-20 pr-20 mt-3'>
         <div className='text-center'>{random}</div>
         <img src={`./img/flower${random}.jpg`} alt="bg" title='bg' className='grayscale-0 hover:grayscale transition delay-150 rounded-lg' />
+        <div className='button'></div>
       </div>
     </>
   )

@@ -94,6 +94,7 @@ export default function Registration() {
     }
 
     if (errorMsg === '') {
+      form.rank = 'user'
       const response = await fetch(process.env.REACT_APP_URL+'/users/add', {
         method: 'POST',
         body: JSON.stringify(form),

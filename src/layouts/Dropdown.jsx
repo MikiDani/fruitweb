@@ -45,12 +45,14 @@ export default function Dropdown() {
           <div className="py-1">
             { cookies.login ? ( 
               <>
+               { user.rank && ( 
+                <Menu.Item>
+                  <NavLink to="/admin" className={ menuStyle + ' text-red-600 font-bold' } >Admin</NavLink>
+                </Menu.Item>
+                ) }
+              
               <Menu.Item>
                 <NavLink to="/profil" className={ menuStyle } >Profil</NavLink>
-              </Menu.Item>
-
-              <Menu.Item>
-                <NavLink to="/admin" className={ menuStyle } >Admin</NavLink>
               </Menu.Item>
 
               <Menu.Item>

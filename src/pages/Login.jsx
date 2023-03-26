@@ -24,21 +24,7 @@ export default function Login() {
   useEffect(() => {
     console.log('useEffect... login');
     if (cookies.login) { navigate("/") }
-    let users = [{
-      username: 'semmi',
-      email: 'semmi',
-      rank: 'semmi',
-      password: 'semmi'
-    }, 
-    {
-      username: 'semmi2',
-      email: 'semmi2',
-      rank: 'semmi2',
-      password: 'semmi2'
-    }]
-
-    //getUsers();     !!!!!
-
+    
     setReload(false)
 
   }, [reload]);
@@ -194,35 +180,6 @@ export default function Login() {
           <div className="h-full flex justify-center items-center">
             <BiDoorOpen size='20rem' color="orange" opacity="0.5" />
           </div>
-        </div>
-      </div>
-      <div className="w-full bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto mt-5">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3"></th>
-              <th scope="col" className="px-6 py-3">Username</th>
-              <th scope="col" className="px-6 py-3">Email</th>
-              <th scope="col" className="px-6 py-3">RANK</th>
-              <th scope="col" className="px-6 py-3">PASSWORD</th>
-              <th scope="col" className="px-6 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id + user.username} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"></th>
-                <td className="px-6 py-4">{user.username}</td>
-                <td className="px-6 py-4">{user.email}</td>
-                <td className="px-6 py-4">{user.rank}</td>
-                <td className="px-6 py-4">{user.password}</td>
-                <td className="px-6 py-4"><button className="bg-orange-500 text-white w-full rounded-lg p-0.5 hover:bg-red-600" onClick={((e) => handleDelete(e, user._id))}>delete</button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="p-3 text-center">
-          <button className="w-full bg-purple-400 text-sm py-2.5 rounded-lg" onClick={handleReload}>Reload button</button>
         </div>
       </div>
       </>

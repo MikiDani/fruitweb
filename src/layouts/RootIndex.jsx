@@ -1,39 +1,65 @@
 import React, { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../variables'
-import { loadUserDetails } from "../functions"
 
 import Dropdown from './Dropdown'
 import MenuList from './MenuList'
 
 export default function RootIndex() {
   
-  const { user, setUser, reload, setReload, cookies, setCookies } = useAppContext()
+  const { user, setUser, reload, setReload, cookies, setCookie } = useAppContext()
   const [menuOpen, setMenuOpen] = useState('hidden')
+  const [waiter, setWaiter] = useState(false)
+
+  const navigate = useNavigate()
+
+  const auntAndUserdata = async (token) => {
+    const auth = await fetch(process.env.REACT_APP_URL + '/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    })
+    const resData = await auth.json()
+    if (resData.auth) {
+      // Correct token. Get user Datas
+      fetch(process.env.REACT_APP_URL + '/users/token/' + cookies.login, { method: 'GET' })
+      .then((response) => response.json())
+      .then((resData) => {
+        const userData = {
+            id : resData._id,
+            username: resData.username,
+            email: resData.email,
+            rank: resData.rank,
+        }
+        // insert user datas
+        setUser(userData)
+      })
+    } else {
+      // the token was awarded
+      setUser({})
+      setCookie('login', '', { path: '/' })
+      sessionStorage.setItem('regForm', null)
+      navigate("/login")
+    }
+  }
 
   useEffect(() => {
     setReload(false)
     console.log('useEffect... ROOT INDEX')
+
+    setInterval(() => {
+      setWaiter(!waiter)
+    }, 180000)
     
     let loginCookie = (cookies.login) ? cookies.login : null;
     if (loginCookie) {
       console.log('cookie valós értéke:'+ cookies.login)
-      fetch(process.env.REACT_APP_URL + '/users/token/' + cookies.login, { method: 'GET' })
-        .then((response) => response.json())
-        .then((resData) => {
-          console.log(resData)
-          const userData = {
-              id : resData._id,
-              username: resData.username,
-              email: resData.email,
-              rank: resData.rank,
-          }
-          // insert user datas
-          setUser(userData)
-        })      
+      auntAndUserdata(cookies.login)
     }
 
-  }, []);
+  }, [waiter]);
 
   const hamburgerClick = () => {
     let value = (menuOpen === 'hidden') ? 'show' : 'hidden'; 
@@ -52,7 +78,6 @@ export default function RootIndex() {
           <div className='hidden md:flex'>
             <MenuList display={'inline ml-5'} />
           </div>
-
           <div className='flex md:hidden' onClick={hamburgerClick}>
             <div className='space-y-2'>
               <span className='block w-8 h-0.5 bg-gray-700 animate-pulse'></span>
@@ -72,7 +97,7 @@ export default function RootIndex() {
       <main className='p-5 rounded bg-white'>
         <Outlet />
       </main>
-
+      
       <footer className='p-3 bg-slate-400 rounded-b-lg mb-10'>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia fugit molestias accusantium, cupiditate ea incidunt laborum sunt earum laudantium iure.</p>
       </footer>

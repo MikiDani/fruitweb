@@ -10,7 +10,7 @@ import Game from './pages/Game';
 import Registration from './pages/Registration';
 import Login from './pages/Login';
 import Profil from './pages/Profil';
-import Admin from './pages/Admin';
+import Admin from './admin/AdminRoot';
 
 // layouts
 import RootIndex from './layouts/RootIndex';

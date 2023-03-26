@@ -72,8 +72,12 @@ server.post('/login', async(req, res) => {
                     res.status(500).json({ error: 'Could not fetch the document.' })
                 })
 
-            const epochStart = Date.now()
-            const epochEnd = (parseInt(Date.now()) + parseInt(28800))
+            const epochStart = parseInt(Date.now())
+            const epochEnd = parseInt(epochStart + 2880000)
+
+
+            console.log('start ' + epochStart)
+            console.log('end ' + epochEnd)
             const random = (Math.floor(Math.random() * 10) + 1).toString()
             const token = crypto.createHash('sha1').update(random).digest('hex')
             const userId = new ObjectId(haveUser._id)
@@ -113,7 +117,7 @@ server.post('/login', async(req, res) => {
 
 // REGISTRATION
 server.post('/users/add', async(req, res) => {
-    const mandatory = ['username', 'email', 'password'];
+    const mandatory = ['username', 'email', 'password', 'rank'];
 
     let input = functions.checkInputs(req.body, mandatory);
     console.log(input);
@@ -129,8 +133,7 @@ server.post('/users/add', async(req, res) => {
             db.collection('users')
                 .insertOne(input)
                 .then(result => {
-                    // result visszaküld?
-                    res.status(201).json({ success: 'Successful registration!' })
+                    res.status(201).json({ success: 'Successful registration!', result: result })
                 })
                 .catch(err => {
                     res.status(500).json({ error: 'Could not create a new document.' })
@@ -148,6 +151,7 @@ server.post('/users/add', async(req, res) => {
 
 //---------------------
 // HAVE autentication :
+//---------------------
 
 // ALL USERS LIST
 server.get('/allusers', async(req, res) => {
@@ -163,7 +167,12 @@ server.get('/allusers', async(req, res) => {
         db.collection('users')
             .find()
             .sort({ username: 1 })
-            .forEach(user => users.push(user))
+            .forEach(user => users.push({
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                rank: user.rank
+            }))
             .then(() => {
                 res.status(200).json(users)
             })
@@ -181,9 +190,7 @@ server.get('/allusers', async(req, res) => {
 server.get('/pageusers', (req, res) => {
     const page = req.query.p || 0
     const userPerPage = 2
-
-    //log('page: ' + page);
-
+        // log('page: ' + page);
     let users = []
 
     db.collection('users')
@@ -295,6 +302,15 @@ server.patch('/users/:id', (req, res) => {
 
     } else {
         res.status(500).json({ error: 'Not a vaild id.' });
+    }
+})
+
+// authentication
+server.post('/auth/', async(req, res) => {
+    if (req.headers.token && await authorize(req.headers.token)) {
+        res.status(200).json({ auth: true })
+    } else {
+        res.status(400).json({ auth: false })
     }
 })
 
