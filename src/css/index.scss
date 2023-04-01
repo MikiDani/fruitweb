@@ -11,6 +11,7 @@ body {
     animation: gradient 90s ease infinite;
 }
 
+// Background
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
@@ -21,4 +22,9 @@ body {
     100% {
         background-position: 0% 50%;
     }
+}
+
+// Admin MenuList show / hidden
+.hidden-div {
+    display: none
 }
