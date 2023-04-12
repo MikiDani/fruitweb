@@ -73,8 +73,7 @@ server.post('/login', async(req, res) => {
                 })
 
             const epochStart = parseInt(Date.now())
-            const epochEnd = parseInt(epochStart + 2880000)
-
+            const epochEnd = parseInt(epochStart + 5760000)
 
             console.log('start ' + epochStart)
             console.log('end ' + epochEnd)

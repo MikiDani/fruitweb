@@ -21,10 +21,11 @@ function App() {
   
   const [user, setUser] = useState({});
   const [reload, setReload] = useState(false);
+  const [deepSwitch, setDeepSwitch] = useState(true);
 
   return (
     <BrowserRouter>
-      <AppContext.Provider value={{ user, setUser, reload, setReload, cookies, setCookie }}>
+      <AppContext.Provider value={{ user, setUser, reload, setReload, cookies, setCookie, deepSwitch, setDeepSwitch }}>
         <Routes>
           <Route path="/" element={<RootIndex />}>
             <Route index element={<Home />} />

@@ -14,6 +14,6 @@ root.render(
       <App/>
     </React.StrictMode>
   </CookiesProvider>
-    );
+  );
 
 reportWebVitals();
