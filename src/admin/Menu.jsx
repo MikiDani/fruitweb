@@ -79,7 +79,7 @@ export default function Menu({menu, handleClick}) {
     <>
     {counterDeep(item.deep)}
     {onlyOne ? (
-      <NewMenuElementForm {...NewMenuElementProps} element = {item} onlyOne={onlyOne}/>
+      <NewMenuElementForm {...NewMenuElementProps} element = {item} onlyOne={onlyOne} hiddenClass={hiddenFunction(item.deep)}/>
     ) : (
       <></>
     )}

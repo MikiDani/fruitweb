@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function NewMenuElementForm ({ element, newInputValue, newInputValueSubmit, onlyOne }) {
+export default function NewMenuElementForm ({ element, newInputValue, newInputValueSubmit, onlyOne, hiddenClass }) {
 
   if (!onlyOne)
     return null;
@@ -9,7 +9,7 @@ export default function NewMenuElementForm ({ element, newInputValue, newInputVa
     <>
     <form 
       id={`form_${element.id}`}
-      className="inline-block"
+      className={`inline-block ${hiddenClass}`}
       onSubmit={(e) => newInputValueSubmit(e, element)}
     >
       <input

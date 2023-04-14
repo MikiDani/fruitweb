@@ -27,10 +27,24 @@ export function AdminMenu({ menu }) {
       // close all level deep childrens
       if (findId)
         document.querySelector(`[id="${element.id}"]`).classList.add('hidden-div')
-    } else {
-      // open only to one level children
-      if (findId && findDeep+1 === element.deep)
+        //document.querySelector(`[id="form_${element.id}"]`).classList.add('hidden-div')
+        //document.querySelector(`[id="form_${element.id}"]`).innerHTML = 'XXXX'
+      } else {
+        // open only to one level children
+        if (findId && findDeep+1 === element.deep)
         document.querySelector(`[id="${element.id}"]`).classList.remove('hidden-div')
+        console.log(element.id);
+
+
+
+        document.querySelector(`[id="form_${element.id}"]`).classList.add('fasz')
+        console.log();
+
+
+
+        
+        //document.querySelector(`[id="form_${element.id}"]`).innerHTML = 'XXXX'
+        //document.querySelector(`[id="form_${element.id}"]`).classList.remove('hidden-div')
     }
     
     if (element.id === idValue) {
@@ -41,7 +55,7 @@ export function AdminMenu({ menu }) {
         let classText = document.querySelector(`[id="${element.child[0].id}"]`).className
         menuClose = (classText.search('hidden-div') !== -1) ? false : true;
       } else {
-        console.log('Ulolsó elment!!!');
+        console.log('Last element!');
         lastMenuElement = true;
       }
       findId = true;
