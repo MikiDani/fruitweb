@@ -1,21 +1,23 @@
 import React, { useState } from 'react'
-import { useAppContext } from '../variables'
-
 import Menu from "./Menu";
 
 export function AdminMenu({ menu }) {
 
   const [selectedMenuId, setSelectedMenuId] = useState(null)
-  const { deepSwitch, setDeepSwitch } = useAppContext()
 
-  let menuList = menu
+  const [menuVariableState, setMenuVariableState] = useState(menu)
 
+  // ---------
+  
+  //let testValue = menuVariableState[2].child[0].child[0].child[0].child[0].name
+  //console.log(testValue)
+  
   // recursive menu variables
   let findId;
   let findDeep = 0;
   let menuClose;
   let lastMenuElement;
-  
+
   const rekursive = (element, idValue) => {
 
     if (element.deep === findDeep) {
@@ -25,26 +27,21 @@ export function AdminMenu({ menu }) {
 
     if (menuClose) {
       // close all level deep childrens
-      if (findId)
+      if (findId) {
         document.querySelector(`[id="${element.id}"]`).classList.add('hidden-div')
-        //document.querySelector(`[id="form_${element.id}"]`).classList.add('hidden-div')
-        //document.querySelector(`[id="form_${element.id}"]`).innerHTML = 'XXXX'
-      } else {
-        // open only to one level children
-        if (findId && findDeep+1 === element.deep)
+        if (document.querySelector(`[id="form_${element.id}"]`)) {
+          document.querySelector(`[id="form_${element.id}"]`).classList.add('hidden-div')
+        }
+      }
+    } else {
+      // open only to one level children
+      if (findId && findDeep+1 === element.deep) {
+
         document.querySelector(`[id="${element.id}"]`).classList.remove('hidden-div')
-        console.log(element.id);
-
-
-
-        document.querySelector(`[id="form_${element.id}"]`).classList.add('fasz')
-        console.log();
-
-
-
-        
-        //document.querySelector(`[id="form_${element.id}"]`).innerHTML = 'XXXX'
-        //document.querySelector(`[id="form_${element.id}"]`).classList.remove('hidden-div')
+        if (document.querySelector(`[id="form_${element.id}"]`)) {
+          document.querySelector(`[id="form_${element.id}"]`).classList.remove('hidden-div')
+        }
+      }
     }
     
     if (element.id === idValue) {
@@ -65,16 +62,14 @@ export function AdminMenu({ menu }) {
     // invate element rekursive
     if (element.child) {
       //console.log('element.child.length: '+element.child.length);
-      setDeepSwitch(true)
       element.child.forEach(childElements => {
         rekursive(childElements, idValue)
       });
-      
     }
   }
     
   const menuHideShow=(idValue) => {
-    menuList.forEach(element => {
+    menuVariableState.forEach(element => {
       findId = false;
       rekursive(element, idValue)
     });
@@ -86,20 +81,61 @@ export function AdminMenu({ menu }) {
     menuHideShow(id)
     if (lastMenuElement) {
       // selected element
-      console.log('Utolsó megnyomva!!! id: '+id);
+      console.log('Utolsó megnyomva!!! id: '+id)
       setSelectedMenuId(id)
       lastMenuElement = false;
     }
   };
+
+  const handleNewChildren = (item, newchildname) => {
+    console.log('NEW CHILD INSERT:')
+    console.log('item:') 
+    console.log(item)
+    console.log('newchildname:'+newchildname)
+  };
+
+  const handleRenameMenu = (element, newMenuName) => {
+    console.log('RENAME ROW:')
+
+    console.log('hozott element:')
+    console.log(element)
+    
+    console.log('New name:')
+    console.log(newMenuName)
+    
+    console.log('menuVariable:')
+    console.log(menuVariableState)
+
+    var foundIndex = menuVariableState.findIndex(x => x.id == element.id);
+    console.log('TALÁLAT:')
+    console.log(menuVariableState[foundIndex])
+    
+    let newElement = element;
+    newElement.name = newMenuName
+    console.log('Gyártott element:')
+    console.log(newElement)
+    
+    
+    
+    /*
+    menuVariable[foundIndex] = newElement;
+    
+    console.log(menuVariable);
+    setMenuVariable(menuVariable)
+    */
+    
+  };
   
   const menuProps = {
-    handleClick
+    handleClick,
+    handleNewChildren,
+    handleRenameMenu
   };
 
   return (
     <div className='mt-2'>
       <div className='inline-block w-2/5'>
-        <Menu {...menuProps} menu={menu} />
+        <Menu {...menuProps} menu={menu} lastMenuElement={lastMenuElement} />
       </div>
       <div className='inline-block w-3/5 bg-gray-300 p-2 align-top'>
         <h3>{selectedMenuId}</h3>
