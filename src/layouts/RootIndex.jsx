@@ -8,8 +8,8 @@ import MenuList from './MenuList'
 export default function RootIndex() {
   
   const { user, setUser, reload, setReload, cookies, setCookie } = useAppContext()
-  const [menuOpen, setMenuOpen] = useState('hidden')
-  const [waiter, setWaiter] = useState(false)
+  const [ menuOpen, setMenuOpen] = useState('hidden')
+  const [ waiter, setWaiter] = useState(false)
 
   const navigate = useNavigate()
 
@@ -68,8 +68,6 @@ export default function RootIndex() {
 
   return (
     <div className='container max-w-4xl mx-auto px-0'>
-      <div>user: {user.username} </div>
-      <div>cookie: {cookies.login} </div>
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-slate-400 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>

@@ -74,9 +74,6 @@ server.post('/login', async(req, res) => {
 
             const epochStart = parseInt(Date.now())
             const epochEnd = parseInt(epochStart + 5760000)
-
-            console.log('start ' + epochStart)
-            console.log('end ' + epochEnd)
             const random = (Math.floor(Math.random() * 10) + 1).toString()
             const token = crypto.createHash('sha1').update(random).digest('hex')
             const userId = new ObjectId(haveUser._id)
@@ -119,7 +116,6 @@ server.post('/users/add', async(req, res) => {
     const mandatory = ['username', 'email', 'password', 'rank'];
 
     let input = functions.checkInputs(req.body, mandatory);
-    console.log(input);
 
     if (input) {
         // check username and email in database
@@ -158,8 +154,7 @@ server.get('/allusers', async(req, res) => {
 
     if (req.headers.token && await authorize(req.headers.token)) {
 
-        console.log("BENT!!!")
-        console.log(req.headers.token)
+        //console.log(req.headers.token)
 
         let users = [];
 
@@ -228,7 +223,7 @@ server.get('/users/id/:id', (req, res) => {
 // ONE USER DATAS :TOKEN
 server.get('/users/token/:token', async(req, res) => {
 
-    console.log(req.params.token)
+    //console.log(req.params.token)
     let haveTokenUserId = false
 
     haveTokenUserId = await db.collection('tokens')
@@ -243,7 +238,6 @@ server.get('/users/token/:token', async(req, res) => {
     if (haveTokenUserId) {
 
         const objectId = new ObjectId(haveTokenUserId)
-        console.log('objectId: ' + objectId)
 
         let userData = await db.collection('users')
             .findOne({ _id: objectId })
@@ -254,7 +248,6 @@ server.get('/users/token/:token', async(req, res) => {
                 res.status(500).json({ error: 'Could not fetch the document.' })
             })
 
-        console.log(userData)
         res.status(200).json(userDataLoad(userData))
 
     } else {
@@ -321,8 +314,6 @@ authorize = async(token) => {
 
     let returnValue = false;
 
-    console.log(token)
-
     let haveToken = await db.collection('tokens')
         .findOne({ token: token })
         .then((data) => {
@@ -333,22 +324,14 @@ authorize = async(token) => {
         })
 
     if (haveToken) {
-        console.log('VAN TOKEN!!!')
-        console.log(haveToken)
 
         let nowEpoch = Date.now()
 
         let datenow = new Date(nowEpoch);
         let dateend = new Date(haveToken.epochend);
 
-        console.log('now: ' + nowEpoch)
-        console.log('end: ' + haveToken.epochend)
-        console.log('nowd: ' + datenow)
-        console.log('endd: ' + dateend)
-
         if (nowEpoch < haveToken.epochend) {
             // token is correct!
-            console.log('JÓ A TOKEN TRUE!!!')
             returnValue = true;
         } else {
             // token era has expired. Token deleting
@@ -360,8 +343,6 @@ authorize = async(token) => {
                     console.log('Token deleted. result: ' + result)
                 })
         }
-    } else {
-        console.log('NINCSEN TOKEN!!!')
     }
 
     return returnValue;

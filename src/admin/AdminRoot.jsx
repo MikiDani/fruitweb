@@ -14,7 +14,6 @@ export default function AdminRoot() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('useEffect... AdminRoot');
 
     if (!cookies.login) { navigate("/") }
     

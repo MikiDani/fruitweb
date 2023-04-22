@@ -31,7 +31,7 @@ export default function Menu({menu, handleClick, newInputValue, newInputValueSub
 
   const hiddenFunction = (deep) => {
     let returnValue = ''
-    //if (deep!=0) returnValue = 'hidden-div'
+    if (deep!=0) returnValue = 'hidden-div'
     return returnValue;
   }
   

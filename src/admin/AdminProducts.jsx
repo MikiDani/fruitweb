@@ -27,7 +27,6 @@ export function AdminProducts() {
 
   const handleReload = async () => {
     setMsg({ msg: cookies.login, style: 'text-orange-500' });
-    console.log(cookies.login);
     setReload(true);
   }
   

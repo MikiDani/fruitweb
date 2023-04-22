@@ -28,14 +28,11 @@ export function AdminUsers() {
 
   const handleReload = async () => {
     setMsg({ msg: cookies.login, style: 'text-orange-500' });
-    console.log(cookies.login);
     //const d = new Date(); let time = d.getTime();
     setReload(true);
   }
   
   const getUsers = async () => {
-    console.log('elötte');
-    console.log(cookies.login);
     const response = await fetch(process.env.REACT_APP_URL + '/allusers', {
       method: 'GET',
       headers: {
