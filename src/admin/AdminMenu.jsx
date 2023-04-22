@@ -5,7 +5,8 @@ export function AdminMenu({ menu }) {
 
   const [selectedMenuId, setSelectedMenuId] = useState(null)
 
-  const [menuVariableState, setMenuVariableState] = useState(menu)
+  const [menuVariable, setMenuVariable] = useState(menu)
+  const [newMenuElement, setNewMenuElement] = useState({})
 
   // ---------
   
@@ -69,7 +70,7 @@ export function AdminMenu({ menu }) {
   }
     
   const menuHideShow=(idValue) => {
-    menuVariableState.forEach(element => {
+    menuVariable.forEach(element => {
       findId = false;
       rekursive(element, idValue)
     });
@@ -87,60 +88,62 @@ export function AdminMenu({ menu }) {
     }
   };
 
-  const handleNewChildren = (item, newchildname) => {
-    console.log('NEW CHILD INSERT:')
-    console.log('item:') 
-    console.log(item)
-    console.log('newchildname:'+newchildname)
+  const newInputValue = (e) => {
+    setNewMenuElement({
+      ...newMenuElement,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleRenameMenu = (element, newMenuName) => {
-    console.log('RENAME ROW:')
+  const newInputValueSubmit = (e, element) => {
+    e.preventDefault();
 
-    console.log('hozott element:')
-    console.log(element.id)
+    console.log('Hozott element:')
+    console.log(element)
     
     console.log('New name:')
-    console.log(newMenuName)
+    console.log(newMenuElement.newname)
     
-    console.log(menuVariableState)
+    var foundIndex = menuVariable.findIndex(x => x.id == element.id);
     
-    
-    var foundIndex = menuVariableState.findIndex(x => x.id == element.id);
-    //var foundIndex = menuVariableState.findIndex(x => { x.id == element.id });
-    
-    console.log('TALÁLAT:')
+    console.log('FOUND element:')
     console.log(foundIndex)
-    console.log(menuVariableState[foundIndex])
-
-    /*
 
     let newElement = element;
-    newElement.name = newMenuName
-    console.log('Gyártott element:')
-    console.log(newElement)
+    newElement.name = newMenuElement.newname
+    setNewMenuElement({})
     
+    console.log('Felépít element::')
+    console.log(menuVariable[foundIndex])
     
-    */
-    /*
     menuVariable[foundIndex] = newElement;
     
     console.log(menuVariable);
     setMenuVariable(menuVariable)
+
+    /*
+    let newRow = [
+    {
+      'id': 1001,
+      'deep': 0,
+      'name': 'JEEE'
+    }];
     */
-    
+
+    //window.location.reload(true)
+    //menu[foundIndex] = item;
   };
   
   const menuProps = {
     handleClick,
-    handleNewChildren,
-    handleRenameMenu
+    newInputValue,
+    newInputValueSubmit
   };
 
   return (
     <div className='mt-2'>
       <div className='w-100'>
-        <Menu {...menuProps} menu={menuVariableState} lastMenuElement={lastMenuElement} />
+        <Menu {...menuProps} menu={menuVariable} lastMenuElement={lastMenuElement} />
       </div>
       <div className='w-100 bg-gray-300 p-2 align-top'>
         <h3>{selectedMenuId}</h3>

@@ -4,28 +4,17 @@ import { useAppContext } from '../variables'
 
 import { useEffect } from "react";
 
-export default function Menu({menu, handleClick, handleNewChildren, handleRenameMenu}) {
+export default function Menu({menu, handleClick, newInputValue, newInputValueSubmit}) {
 
   const [menuVariable, setMenuVariable] = useState(menu)
-  const [newMenuElement, setNewMenuElement] = useState({})
-
-  let newChildrenName = null;
-  let newMenuName = null;
   
   //Ez az ellenőrzés biztosítja, hogy a rekurzió leálljon, ha egy menüelemnek nincs gyermeke
   if (!menu || !menu.length) return null;
 
-  const newInputValue = (e) => {
-    setNewMenuElement({
-      ...newMenuElement,
-      [e.target.name]: e.target.value
-    });
-  };
-
   const menuProps = {
     handleClick,
-    handleNewChildren,
-    handleRenameMenu
+    newInputValue,
+    newInputValueSubmit
   }
 
   const colorFunction = (deep) => {
@@ -69,26 +58,28 @@ export default function Menu({menu, handleClick, handleNewChildren, handleRename
                   {item.name}
                 </span>
               </div>
-              <div className="w-100 text-end flex justify-end items-center bg-gray-300">
-                <div className="block bg-purple-400">
-                  <div className="inline w-64">
-                  <input
-                    type="text"
-                    name="newname"
-                    placeholder={item.id}
-                    autoComplete="off"
-                    className="inline ml-1 mt-1 px-1 py-1 bg-white border border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 rounded-md sm:text-sm focus:ring-1"
-                    onChange={(e) => newInputValue(e)}
-                  />
-                  </div>
-                  <div className="inline w-48">
-                  <button 
-                    onClick={() => handleRenameMenu(item, newMenuElement)}
-                    className={`inline text-white ${colorFunction(item.id)} hover:bg-orange-300 focus:ring-2 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-2 py-1 ml-1 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}>RENAME
-                  </button>
+              <form id={`form_${item.id}`} onSubmit={(e) => newInputValueSubmit(e, item)}>
+                <div className="w-100 text-end flex justify-end items-center bg-gray-300">
+                  <div className="block bg-purple-400">
+                    <div className="inline w-64">
+                    <input
+                      type="text"
+                      name="newname"
+                      placeholder={item.id}
+                      autoComplete="off"
+                      className="inline ml-1 mt-1 px-1 py-1 bg-white border border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 rounded-md sm:text-sm focus:ring-1"
+                      onChange={(e) => newInputValue(e)}
+                    />
+                    </div>
+                    <div className="inline w-48">
+                    <button 
+                      type="submit"
+                      className={`inline text-white ${colorFunction(item.id)} hover:bg-orange-300 focus:ring-2 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-2 py-1 ml-1 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}>RENAME
+                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
           
         </div>
