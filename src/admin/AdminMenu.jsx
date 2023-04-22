@@ -98,25 +98,30 @@ export function AdminMenu({ menu }) {
     console.log('RENAME ROW:')
 
     console.log('hozott element:')
-    console.log(element)
+    console.log(element.id)
     
     console.log('New name:')
     console.log(newMenuName)
     
-    console.log('menuVariable:')
     console.log(menuVariableState)
-
-    var foundIndex = menuVariableState.findIndex(x => x.id == element.id);
-    console.log('TALÁLAT:')
-    console.log(menuVariableState[foundIndex])
     
+    
+    var foundIndex = menuVariableState.findIndex(x => x.id == element.id);
+    //var foundIndex = menuVariableState.findIndex(x => { x.id == element.id });
+    
+    console.log('TALÁLAT:')
+    console.log(foundIndex)
+    console.log(menuVariableState[foundIndex])
+
+    /*
+
     let newElement = element;
     newElement.name = newMenuName
     console.log('Gyártott element:')
     console.log(newElement)
     
     
-    
+    */
     /*
     menuVariable[foundIndex] = newElement;
     
@@ -134,10 +139,10 @@ export function AdminMenu({ menu }) {
 
   return (
     <div className='mt-2'>
-      <div className='inline-block w-2/5'>
-        <Menu {...menuProps} menu={menu} lastMenuElement={lastMenuElement} />
+      <div className='w-100'>
+        <Menu {...menuProps} menu={menuVariableState} lastMenuElement={lastMenuElement} />
       </div>
-      <div className='inline-block w-3/5 bg-gray-300 p-2 align-top'>
+      <div className='w-100 bg-gray-300 p-2 align-top'>
         <h3>{selectedMenuId}</h3>
         <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem atque quibusdam facere accusamus tempora expedita similique sint quisquam debitis eum nam, illum nulla voluptates minima maiores veniam ullam illo eaque!
         Doloremque eius, dolores nesciunt commodi iure nemo? Molestias maiores numquam nostrum illo. Animi aliquam distinctio sit ut error ex earum labore, doloremque illum perferendis optio saepe porro sequi nihil veniam.</p>
