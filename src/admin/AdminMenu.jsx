@@ -8,11 +8,6 @@ export function AdminMenu({ menu }) {
   const [menuVariable, setMenuVariable] = useState(menu)
   const [newMenuElement, setNewMenuElement] = useState({})
 
-  // ---------
-  
-  //let testValue = menuVariableState[2].child[0].child[0].child[0].child[0].name
-  //console.log(testValue)
-  
   // recursive menu variables
   let findId;
   let findDeep = 0;
@@ -53,7 +48,6 @@ export function AdminMenu({ menu }) {
         let classText = document.querySelector(`[id="${element.child[0].id}"]`).className
         menuClose = (classText.search('hidden-div') !== -1) ? false : true;
       } else {
-        console.log('Last element!');
         lastMenuElement = true;
       }
       findId = true;
@@ -62,7 +56,6 @@ export function AdminMenu({ menu }) {
 
     // invate element rekursive
     if (element.child) {
-      //console.log('element.child.length: '+element.child.length);
       element.child.forEach(childElements => {
         rekursive(childElements, idValue)
       });
@@ -78,11 +71,8 @@ export function AdminMenu({ menu }) {
 
   // Hook handleClick
   const handleClick = (id) => {
-    console.log('hozott id:', id)
     menuHideShow(id)
-    if (lastMenuElement) {
-      // selected element
-      console.log('Utolsó megnyomva!!! id: '+id)
+    if (lastMenuElement) {  
       setSelectedMenuId(id)
       lastMenuElement = false;
     }
@@ -98,40 +88,15 @@ export function AdminMenu({ menu }) {
   const newInputValueSubmit = (e, element) => {
     e.preventDefault();
 
-    console.log('Hozott element:')
-    console.log(element)
+    var foundIndex = menuVariable.findIndex(x => x.id === element.id);
     
-    console.log('New name:')
-    console.log(newMenuElement.newname)
-    
-    var foundIndex = menuVariable.findIndex(x => x.id == element.id);
-    
-    console.log('FOUND element:')
-    console.log(foundIndex)
-
     let newElement = element;
     newElement.name = newMenuElement.newname
     setNewMenuElement({})
-    
-    console.log('Felépít element::')
-    console.log(menuVariable[foundIndex])
-    
+        
     menuVariable[foundIndex] = newElement;
-    
-    console.log(menuVariable);
     setMenuVariable(menuVariable)
 
-    /*
-    let newRow = [
-    {
-      'id': 1001,
-      'deep': 0,
-      'name': 'JEEE'
-    }];
-    */
-
-    //window.location.reload(true)
-    //menu[foundIndex] = item;
   };
   
   const menuProps = {
@@ -145,10 +110,9 @@ export function AdminMenu({ menu }) {
       <div className='w-100'>
         <Menu {...menuProps} menu={menuVariable} lastMenuElement={lastMenuElement} />
       </div>
-      <div className='w-100 bg-gray-300 p-2 align-top'>
+      <div className='w-100 bg-gray-300 p-2 align-top rounded-lg'>
         <h3>{selectedMenuId}</h3>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem atque quibusdam facere accusamus tempora expedita similique sint quisquam debitis eum nam, illum nulla voluptates minima maiores veniam ullam illo eaque!
-        Doloremque eius, dolores nesciunt commodi iure nemo? Molestias maiores numquam nostrum illo. Animi aliquam distinctio sit ut error ex earum labore, doloremque illum perferendis optio saepe porro sequi nihil veniam.</p>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem atque quibusdam facere accusamus tempora expedita similique sint quisquam debitis eum nam illum.</p>
       </div>
     </div>
   );

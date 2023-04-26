@@ -118,9 +118,6 @@ export default function Registration() {
   }
 
   useEffect(() => {
-    console.log('useEffect...');
-    console.log('cookies: '+ cookies.login);
-
     if (cookies.login) { 
       sessionStorage.setItem('regForm', null)
       navigate("/") 
@@ -138,9 +135,6 @@ export default function Registration() {
       inputRePassword.current.value = (sessionForm.repassword !== undefined) ? sessionForm.repassword : '';
       inputRobotbutton.current.checked = (sessionForm.username !== undefined) ? sessionForm.robotbutton : '';
     }
-
-    //sessionStorage.clear();
-    //console.log('sessionStorage : '); console.log(sessionForm); console.log(form);
 
   }, [])
 

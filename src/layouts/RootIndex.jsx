@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import { useAppContext } from '../variables'
 
 import Dropdown from './Dropdown'
@@ -7,7 +7,7 @@ import MenuList from './MenuList'
 
 export default function RootIndex() {
   
-  const { user, setUser, reload, setReload, cookies, setCookie } = useAppContext()
+  const { setUser, setReload, cookies, setCookie } = useAppContext()
   const [ menuOpen, setMenuOpen] = useState('hidden')
   const [ waiter, setWaiter] = useState(false)
 
@@ -47,7 +47,6 @@ export default function RootIndex() {
 
   useEffect(() => {
     setReload(false)
-    console.log('useEffect... ROOT INDEX')
 
     setInterval(() => {
       setWaiter(!waiter)
@@ -55,7 +54,6 @@ export default function RootIndex() {
     
     let loginCookie = (cookies.login) ? cookies.login : null;
     if (loginCookie) {
-      console.log('cookie valós értéke:'+ cookies.login)
       auntAndUserdata(cookies.login)
     }
 
@@ -69,7 +67,7 @@ export default function RootIndex() {
   return (
     <div className='container max-w-4xl mx-auto px-0'>
       <header className='mt-10'>
-        <nav className='flex items-center justify-between bg-slate-400 text-center rounded-t-lg'>
+        <nav className='flex items-center justify-between bg-indigo-300 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>
             <h3 className='p-3 font-bold'>FruitWeb</h3>
           </div>
@@ -96,8 +94,27 @@ export default function RootIndex() {
         <Outlet />
       </main>
       
-      <footer className='p-3 bg-slate-400 rounded-b-lg mb-10'>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quia fugit molestias accusantium, cupiditate ea incidunt laborum sunt earum laudantium iure.</p>
+      <footer className='p-3 bg-slate-500 rounded-b-lg mb-10'>
+        <div className="grid grid-cols-3 gap-4">
+          <div className='text-yellow-100 bg-purple-500 rounded-lg'>
+            <ul className='p-3 ml-5 list-disc text-start'>
+              <li className='text-white hover:text-indigo-500'><NavLink to='/'>Home</NavLink></li>
+              <li className='text-white hover:text-indigo-500'><NavLink to='/about'>About</NavLink></li>
+              <li className='text-white hover:text-indigo-500'><NavLink to='/login'>Login</NavLink></li>
+              <li className='text-white hover:text-indigo-500'><NavLink to='/registration'>Registration</NavLink></li>
+            </ul>
+          </div>
+          <div className='flex justify-center items-center p-3 text-center bg-green-500 rounded-lg'>
+            <ul>
+              <li>All rights reserved &copy; 2023</li>
+              <li><a className='text-white hover:text-orange-500' href='mailto:free.ingyenes@gmail.com'>free.ingyenes@gmail.com</a></li>
+              <li><a className='text-white hover:text-orange-500' href="https://github.com/MikiDani" target="_blank">MikiDani</a></li>
+            </ul>
+          </div>
+          <div className='p-3 bg-yellow-500 rounded-lg'>
+            <p>This is a mini authentication web engine based on React, Tailwind and Mongo db.</p>
+          </div>
+        </div>
       </footer>
     </div>
   )

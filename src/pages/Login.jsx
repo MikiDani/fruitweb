@@ -22,7 +22,6 @@ export default function Login() {
   const inputRobotbutton = useRef({ checked: false })
 
   useEffect(() => {
-    console.log('useEffect... login');
     if (cookies.login) { navigate("/") }
     
     setReload(false)
