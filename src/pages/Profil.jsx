@@ -19,6 +19,8 @@ function Profil() {
   const inputPassword = useRef(null)
   const inputRePassword = useRef(null)
   const inputRobotbutton = useRef({checked: false})
+  const inputNewPassword = useRef(null)
+  const inputNewRePassword = useRef(null)
 
   const resetForm = () => {
     inputUsername.current.value = ''
@@ -56,6 +58,12 @@ function Profil() {
     console.log(cookies.login);
 
     let userData = await loadUserDetails(cookies.login)
+    
+    console.log(userData)
+
+    inputUsername.current.value = userData.username
+    inputEmail.current.value = userData.email
+
     setUser(userData)
     setReload(true)
   }
@@ -88,8 +96,8 @@ function Profil() {
       errorMsg += ' ' + error + ' '
     }
     try {
-      if (form.password !== form.repassword) {
-        throw new Error ('The passwords entered do not match.')
+      if (form.newpassword !== form.newrepassword) {
+        throw new Error ('The new passwords entered do not match.')
       }
     }
     catch (error) {
@@ -97,8 +105,7 @@ function Profil() {
     }
 
     if (errorMsg === '') {
-      form.rank = 'user'
-      const response = await fetch(process.env.REACT_APP_URL+'/users/add', {
+      const response = await fetch(process.env.REACT_APP_URL+'/users/mod', {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
@@ -128,51 +135,55 @@ function Profil() {
   return (
     <>
     {cookies.login && (
-    <div className='flex justify-start bg-white'>
-     <div className='hidden lg:block w-1/2 rounded'>
-       <div className='h-full flex justify-center items-center'>
-         <MdOutlineAppRegistration size='20rem' color='orange' opacity='0.5'/>
-       </div>
-     </div>
-     <div className='w-full lg:w-1/2 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto'>
-       <div className='p-6 space-y-4'>
-       <div className='flex justify-between items-center'>
-         <h1 className='font-bold text-gray-900 text-2xl dark:text-white'>
-           My Profil
-         </h1>
-         <MdDeleteForever onClick={resetForm} className='p-0.5 rounded-full bg-red-700 hover:bg-red-500' size='2rem' color='white' />
-       </div>
-         <form className='space-y-4' onSubmit={handleSubmit}>
-           <div>
-             <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Username</label>
-             <input type='text' name='username' id='username' ref={inputUsername} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='username' autoComplete='off' required={true} />
-           </div>
-           <div>
-             <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email</label>
-             <input type='text' name='email' id='email' ref={inputEmail} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='email' autoComplete='off' required={true} />
-           </div>
-           <div>
-             <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Password</label>
-             <input type='password' name='password' id='password' ref={inputPassword} onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
-           </div>
-           <div>
-             <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Repeat password</label>
-             <input type='password' name='repassword' id='repassword' ref={inputRePassword} onChange={handleForm} placeholder='••••••••' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
-           </div>
-           <div className='p-3'>
-             {msg && <div className={`text-center ${msg.style}`}>{msg.msg}</div>}
-           </div>
-           <button type='submit' className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'>Save Changes</button>
-           <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
-             do you have an account? <NavLink to='/login' className='font-medium text-primary-600 hover:underline dark:text-primary-500'>
-               Login
-             </NavLink>
-           </p>
-         </form>
-       </div>
-     </div>
-   </div>
-    )}
+      <div className='flex justify-start bg-white'>
+        <div className='hidden lg:block w-1/2 rounded'>
+          <div className='h-full flex justify-center items-center'>
+            <MdOutlineAppRegistration size='20rem' color='orange' opacity='0.5' />
+          </div>
+        </div>
+        <div className='w-full lg:w-1/2 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700 mx-auto'>
+          <div className='p-6 space-y-4'>
+            <div className='flex justify-between items-center'>
+              <h1 className='font-bold text-gray-900 text-2xl dark:text-white'>
+                My Profil
+              </h1>
+              <MdDeleteForever onClick={resetForm} className='p-0.5 rounded-full bg-red-700 hover:bg-red-500' size='2rem' color='white' />
+            </div>
+            <form className='space-y-4' onSubmit={handleSubmit}>
+              <div>
+                <label className='inline-block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Password</label> <label className="inline-block ml-5 text-zinc-400 text-xs">Enter your password to edit</label>
+                <input type='password' name='password' id='password' ref={inputPassword} onChange={handleForm} placeholder='' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Username</label>
+                <input type='text' name='username' id='username' ref={inputUsername} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='username' autoComplete='off' required={true} />
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email</label>
+                <input type='text' name='email' id='email' ref={inputEmail} onChange={handleForm} className='bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' placeholder='email' autoComplete='off' required={true} />
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>New Password</label>
+                <input type='password' name='newpassword' id='newpassword' ref={inputNewPassword} onChange={handleForm} placeholder='' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
+              </div>
+              <div>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Repeat new password</label>
+                <input type='password' name='newrepassword' id='newrepassword' ref={inputNewRePassword} onChange={handleForm} placeholder='' className='bg-gray-50 border border-gray-300 text-gray-900  rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' required={true} />
+              </div>
+              <div className='p-3'>
+                {msg && <div className={`text-center ${msg.style}`}>{msg.msg}</div>}
+              </div>
+              <button type='submit' className='w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'>Save Changes</button>
+              <p className='text-sm font-light text-gray-500 dark:text-gray-400'>
+                do you have an account? <NavLink to='/login' className='font-medium text-primary-600 hover:underline dark:text-primary-500'>
+                  Login
+                </NavLink>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+      )}
     </>
   );
 }

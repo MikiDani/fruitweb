@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import { useAppContext } from '../variables'
+import { GiFruitBowl } from 'react-icons/gi'
 
 import Dropdown from './Dropdown'
 import MenuList from './MenuList'
@@ -69,7 +70,7 @@ export default function RootIndex() {
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-indigo-300 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>
-            <h3 className='p-3 font-bold'>FruitWeb</h3>
+            <h3 className='p-3 font-bold'>FruitWeb <GiFruitBowl className='inline-block' /></h3>
           </div>
           <div className='hidden md:flex'>
             <MenuList display={'inline ml-5'} />
@@ -94,7 +95,7 @@ export default function RootIndex() {
         <Outlet />
       </main>
       
-      <footer className='p-3 bg-slate-500 rounded-b-lg mb-10'>
+      <footer className='p-3 bg-indigo-300 rounded-b-lg mb-10'>
         <div className="grid grid-cols-3 gap-4">
           <div className='text-yellow-100 bg-purple-500 rounded-lg'>
             <ul className='p-3 ml-5 list-disc text-start'>
@@ -111,8 +112,8 @@ export default function RootIndex() {
               <li><a className='text-white hover:text-orange-500' href="https://github.com/MikiDani" target="_blank">MikiDani</a></li>
             </ul>
           </div>
-          <div className='p-3 bg-yellow-500 rounded-lg'>
-            <p>This is a mini authentication web engine based on React, Tailwind and Mongo db.</p>
+          <div className='p-3 bg-yellow-300 rounded-lg'>
+            <p>It is an mini authentication web engine. Prepared framework width React and Tailwind and Mongo db.</p>
           </div>
         </div>
       </footer>
