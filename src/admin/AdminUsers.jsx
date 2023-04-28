@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useAppContext } from '../variables'
 
@@ -12,9 +12,7 @@ export function AdminUsers() {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    console.log('useEffect... AdminUsers');    
-    
+  useEffect(() => {   
     // Only logined user
     if (user.rank == 'admin') {
       setAuthorize(true)
@@ -25,12 +23,6 @@ export function AdminUsers() {
     getUsers()
     setReload(false)
   }, [reload, msg])
-
-  const handleReload = async () => {
-    setMsg({ msg: cookies.login, style: 'text-orange-500' });
-    //const d = new Date(); let time = d.getTime();
-    setReload(true);
-  }
   
   const getUsers = async () => {
     const response = await fetch(process.env.REACT_APP_URL + '/allusers', {
@@ -95,10 +87,7 @@ export function AdminUsers() {
             ))}
           </tbody>
         </table>
-        <div className={`pt-3 text-center ${msg.style}`}>{msg.msg}</div>
-        <div className="p-3 text-center">
-          <button className="w-full bg-purple-400 text-sm py-2.5 rounded-lg" onClick={handleReload}>Reload button</button>
-        </div>
+        <div className={`py-3 text-center ${msg.style}`}>{msg.msg}</div>
       </div>
     ) }
     </>

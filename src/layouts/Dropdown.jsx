@@ -10,7 +10,7 @@ export default function Dropdown() {
 
   const navigate = useNavigate();
 
-  const menuStyle = 'bg-gray-100 text-gray-700 block px-4 py-2 text-sm'
+  const menuStyle = 'bg-white text-gray-700 block px-4 py-2 text-sm rounded-lg'
 
   const handleLogOut = () => {
     setUser({})
@@ -40,8 +40,8 @@ export default function Dropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
+        <Menu.Items 
+        className="absolute right-0 z-10 mt-4 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             { cookies.login ? ( 
               <>
                { user.rank && ( 
@@ -69,7 +69,6 @@ export default function Dropdown() {
               </Menu.Item>
               </>
               )}
-          </div>
         </Menu.Items>
       </Transition>
     </Menu>

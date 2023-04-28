@@ -106,13 +106,13 @@ export function AdminMenu({ menu }) {
   };
 
   return (
-    <div className='mt-2'>
+    <div className='mt-4'>
       <div className='w-100'>
         <Menu {...menuProps} menu={menuVariable} lastMenuElement={lastMenuElement} />
       </div>
-      <div className='w-100 bg-gray-300 p-2 align-top rounded-lg'>
-        <h3>{selectedMenuId}</h3>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem atque quibusdam facere accusamus tempora expedita similique sint quisquam debitis eum nam illum.</p>
+      <div className='w-100 bg-gray-300 p-2 mt-4 align-top rounded-lg'>
+      {selectedMenuId ? ( <h3 className='uppercase font-medium'>Selected menu id: {selectedMenuId}</h3> ): (<></>) }
+        <p>This is uninteresting. I just left it in the code. This is an exercise for a recursive menu. can be deleted.</p>
       </div>
     </div>
   );

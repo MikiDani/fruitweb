@@ -1,5 +1,3 @@
-const log = console.log;
-
 export function checkLength(textName, textValue, textMin, textMax) {
     if (typeof textValue == 'undefined') {
         throw new Error('The ' + textName + ' is empty.');

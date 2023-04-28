@@ -5,7 +5,6 @@ import { useAppContext } from '../variables'
 
 import { AdminMenu } from './AdminMenu'
 import { AdminUsers } from './AdminUsers'
-import { AdminProducts } from './AdminProducts'
 
 export default function AdminRoot() {
 
@@ -135,12 +134,10 @@ export default function AdminRoot() {
       <>
         <nav className='text-center'>
           <button className={`${style} ${menuSelectedColor('menu')}`} onClick={() => setInc('menu')}>Menu</button>
-          <button className={`${style} ${menuSelectedColor('users')}`} onClick={() => setInc('users')}>Users</button>
-          <button className={`${style} ${menuSelectedColor('products')}`} onClick={() => setInc('products')}>Products</button>
+          <button className={`${style} ${menuSelectedColor('users')}`} onClick={() => setInc('users')}>Users</button><span className='text-xs'>Only admin rank</span>
         </nav>
           { (inc === 'menu') ? <AdminMenu menu={menuList}/> : (<></>)}
           { (inc === 'users') ? <AdminUsers/> : (<></>)}
-          { (inc === 'products') ? <AdminProducts/> : (<></>)}
       </>
     ) }
     </>

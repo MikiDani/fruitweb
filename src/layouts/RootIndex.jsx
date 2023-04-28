@@ -82,11 +82,11 @@ export default function RootIndex() {
               <span className='block w-8 h-0.5 bg-gray-700 animate-pulse'></span>
             </div>
           </div>
-          <div className='flex mr-2 bg-green-600'>
+          <div className='flex mr-2'>
             <Dropdown />
           </div>
         </nav>
-        <div className={`${menuOpen} md:hidden bg-gray-300 text-center p-4 space-y-4`}>
+        <div className={`${menuOpen} md:hidden bg-lime-300 text-center p-4 space-y-4`}>
           <MenuList display={'block'} />
         </div>
       </header>
@@ -98,22 +98,22 @@ export default function RootIndex() {
       <footer className='p-3 bg-indigo-300 rounded-b-lg mb-10'>
         <div className="grid grid-cols-3 gap-4">
           <div className='text-yellow-100 bg-purple-500 rounded-lg'>
-            <ul className='p-3 ml-5 list-disc text-start'>
-              <li className='text-white hover:text-indigo-500'><NavLink to='/'>Home</NavLink></li>
-              <li className='text-white hover:text-indigo-500'><NavLink to='/about'>About</NavLink></li>
-              <li className='text-white hover:text-indigo-500'><NavLink to='/login'>Login</NavLink></li>
-              <li className='text-white hover:text-indigo-500'><NavLink to='/registration'>Registration</NavLink></li>
+            <ul className='p-3 ml-5 list-disc text-start text-sm'>
+              <li className='text-white hover:text-indigo-200'><NavLink to='/'>Home</NavLink></li>
+              <li className='text-white hover:text-indigo-200'><NavLink to='/about'>About</NavLink></li>
+              <li className='text-white hover:text-indigo-200'><NavLink to='/login'>Login</NavLink></li>
+              <li className='text-white hover:text-indigo-200'><NavLink to='/registration'>Registration</NavLink></li>
             </ul>
           </div>
           <div className='flex justify-center items-center p-3 text-center bg-green-500 rounded-lg'>
-            <ul>
-              <li>All rights reserved &copy; 2023</li>
-              <li><a className='text-white hover:text-orange-500' href='mailto:free.ingyenes@gmail.com'>free.ingyenes@gmail.com</a></li>
-              <li><a className='text-white hover:text-orange-500' href="https://github.com/MikiDani" target="_blank">MikiDani</a></li>
+            <ul className='text-xs'>
+              <li className='uppercase'>open source authentication mini-interface</li>
+              <li className='p-2'><a className='text-white hover:text-orange-500' href='mailto:free.ingyenes@gmail.com'>free.ingyenes@gmail.com</a></li>
+              <li><a className='text-white hover:text-orange-500' href="https://github.com/MikiDani" target="_blank">github.com/MikiDani</a></li>
             </ul>
           </div>
-          <div className='p-3 bg-yellow-300 rounded-lg'>
-            <p>It is an mini authentication web engine. Prepared framework width React and Tailwind and Mongo db.</p>
+          <div className='p-3 bg-yellow-300 rounded-lg flex justify-center items-center'>
+            <p className='text-sm'>It is an mini authentication interface. Prepared framework width <a className='font-semibold hover:text-teal-600' href='https://legacy.reactjs.org/' target='_blank'>React</a> and <a className='font-semibold hover:text-cyan-600' href='https://tailwindcss.com/' target='_blank'>Tailwind</a> and <a className='font-semibold hover:text-lime-400' href='https://www.mongodb.com/' target='_blank'>MongoDB</a>.</p>
           </div>
         </div>
       </footer>
