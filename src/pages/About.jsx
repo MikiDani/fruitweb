@@ -2,7 +2,7 @@ function About() {
   return (
     <>
       <div className='text-center'>
-        <h3 className="uppercase mt-5"><strong>This is a mini authentication web interface</strong></h3>
+        <h3 className="uppercase mt-5"><strong>This is a mini authentication web interface by MikiDani</strong></h3>
       </div>
       <div className='pl-20 pr-20 mt-7'>
         <p className="text">This is a mini authentication web interface based on React, Tailwind and Mongo db.</p>

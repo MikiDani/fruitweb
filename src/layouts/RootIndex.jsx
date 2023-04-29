@@ -65,12 +65,18 @@ export default function RootIndex() {
     setMenuOpen(value);
   }
 
+  const logoColor = () => {
+    let random = (Math.floor(Math.random()*2)+1)
+    if (random===1) {return 'white' }
+    if (random===2) {return 'yellow' }
+  }
+
   return (
     <div className='container max-w-4xl mx-auto px-0'>
       <header className='mt-10'>
         <nav className='flex items-center justify-between bg-indigo-300 text-center rounded-t-lg'>
           <div className='bg-orange-400 rounded-tl-lg'>
-            <h3 className='p-3 font-bold'>FruitWeb <GiFruitBowl className='inline-block' /></h3>
+            <h3 className='p-3 font-bold'>FruitWeb <GiFruitBowl className='inline-block ml-2' color={logoColor()} size={40} /></h3>
           </div>
           <div className='hidden md:flex'>
             <MenuList display={'inline ml-5'} />
@@ -97,7 +103,10 @@ export default function RootIndex() {
       
       <footer className='p-3 bg-indigo-300 rounded-b-lg mb-10'>
         <div className="grid grid-cols-3 gap-4">
-          <div className='text-yellow-100 bg-purple-500 rounded-lg'>
+          <div 
+            className='text-yellow-100 bg-purple-500 rounded-lg'
+            style={{ backgroundImage:`url('img/bg_blueberry.png')`,backgroundRepeat:"no-repeat",backgroundSize:"cover", backgroundPosition: "center" }}
+          >
             <ul className='p-3 ml-5 list-disc text-start text-sm'>
               <li className='text-white hover:text-indigo-200'><NavLink to='/'>Home</NavLink></li>
               <li className='text-white hover:text-indigo-200'><NavLink to='/about'>About</NavLink></li>
@@ -105,15 +114,21 @@ export default function RootIndex() {
               <li className='text-white hover:text-indigo-200'><NavLink to='/registration'>Registration</NavLink></li>
             </ul>
           </div>
-          <div className='flex justify-center items-center p-3 text-center bg-green-500 rounded-lg'>
+          <div 
+            className='flex justify-center items-center p-3 text-center bg-green-500 rounded-lg'
+            style={{ backgroundImage:`url('img/bg_kiwi.png')`,backgroundRepeat:"no-repeat",backgroundSize:"cover", backgroundPosition: "center" }}
+          >
             <ul className='text-xs'>
               <li className='uppercase'>open source authentication mini-interface</li>
               <li className='p-2'><a className='text-white hover:text-orange-500' href='mailto:free.ingyenes@gmail.com'>free.ingyenes@gmail.com</a></li>
               <li><a className='text-white hover:text-orange-500' href="https://github.com/MikiDani" target="_blank">github.com/MikiDani</a></li>
             </ul>
           </div>
-          <div className='p-3 bg-yellow-300 rounded-lg flex justify-center items-center'>
-            <p className='text-sm'>It is an mini authentication interface. Prepared framework width <a className='font-semibold hover:text-teal-600' href='https://legacy.reactjs.org/' target='_blank'>React</a> and <a className='font-semibold hover:text-cyan-600' href='https://tailwindcss.com/' target='_blank'>Tailwind</a> and <a className='font-semibold hover:text-lime-400' href='https://www.mongodb.com/' target='_blank'>MongoDB</a>.</p>
+          <div 
+            className='p-3 bg-yellow-300 rounded-lg flex justify-center items-center'
+            style={{ backgroundImage:`url('img/bg_banana.png')`,backgroundRepeat:"no-repeat",backgroundSize:"cover", backgroundPosition: "center" }}
+          >
+            <p className='text-sm text-center'>It is an mini authentication interface. Prepared framework width <a className='font-semibold hover:text-teal-600' href='https://legacy.reactjs.org/' target='_blank'>React</a> and <a className='font-semibold hover:text-cyan-600' href='https://tailwindcss.com/' target='_blank'>Tailwind</a> and <a className='font-semibold hover:text-lime-400' href='https://www.mongodb.com/' target='_blank'>MongoDB</a>.</p>
           </div>
         </div>
       </footer>

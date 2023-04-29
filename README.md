@@ -5,3 +5,12 @@ This is a demo of my development practice. This is a mini authentication web eng
 ## Admin
 
 Hég kell adatokat írnom ide.
+
+
+## RUN BACKEND:
+
+&cd node-server
+&npm install
+&nodemon server.js
+
+server listening on port 8080

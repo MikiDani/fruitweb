@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
@@ -25,8 +24,3 @@ body {
 .hidden-div {
   display: none;
 }/*# sourceMappingURL=index.css.map */
-
-.menu-button-width {
-  max-width: 200px;
-  text-align: right;
-}

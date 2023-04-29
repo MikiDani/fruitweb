@@ -14,13 +14,5 @@ module.exports = {
                 return cb(err)
             })
     },
-    getDb: () => dbConnection,
-    danika: (a, b) => {
-        let c = a + b;
-        console.log('a: ' + a);
-        console.log('b: ' + b);
-        console.log('a+b = c: ' + c);
-
-        return c;
-    }
+    getDb: () => dbConnection
 }

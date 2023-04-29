@@ -30,7 +30,7 @@ function Profil() {
   }
   
   // reload user data
-  const handleReload = async () => {
+  const userdataReload = async () => {
 
     let userData = await loadUserDetails(cookies.login)
     
@@ -137,6 +137,7 @@ function Profil() {
           if (key === 'error') { setMsg({msg: resData.error, style:'text-red-600' }) }
           if (key === 'success') { 
             setMsg({msg: resData.success, style:'text-green-500'})
+            userdataReload()
             setReload(true) 
           }
         })
@@ -153,7 +154,7 @@ function Profil() {
 
   useEffect(() => {
     if (!cookies.login) { navigate('/') }
-    handleReload()
+    userdataReload()
   }, [])
 
   return (
