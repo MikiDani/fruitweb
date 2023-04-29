@@ -6,7 +6,6 @@
 .pnp.js
 
 /node-server/node_modules/
-/database/
 /public/img/
 
 # testing

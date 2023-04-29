@@ -12,12 +12,14 @@ This is a demo of my development practice. Mini authentication web interface bas
 
 ### RUN BACKEND:
 
-&cd node-server
-&npm install
-&nodemon server.js
+|&cd node-server       |
+|:---------------------|
+|&npm install          |
+|&nodemon server.js    |
 
-server listening on port 8080
-mongodb://localhost:27017/fruitweb
+|server listening on port 8080     |
+|----------------------------------|
+|mongodb://localhost:27017/fruitweb|
 
 ### TEST USERS
 

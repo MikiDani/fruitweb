@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "63f8eeabc4c3723ff124276c"
+  },
+  "username": "admin",
+  "email": "admin@admin.hu",
+  "password": "123456",
+  "rank": "admin"
+},{
+  "_id": {
+    "$oid": "63f9036e233b2e9152a5e840"
+  },
+  "username": "TesztElek",
+  "email": "tesztelek@prog.hu",
+  "password": "abcdef",
+  "rank": "admin"
+},{
+  "_id": {
+    "$oid": "641dd74382d748674762e964"
+  },
+  "username": "MikiMaki",
+  "email": "mikimaki@maki.hu",
+  "password": "123456",
+  "rank": "user"
+}]
